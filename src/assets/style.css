@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'Poppins';
+    src: url("@/assets/fonts/Poppins-Medium.ttf");
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+    --font-poppins: 'Poppins'
+}
