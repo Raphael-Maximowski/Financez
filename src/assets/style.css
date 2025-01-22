@@ -6,5 +6,6 @@
 }
 
 :root {
-    --font-poppins: 'Poppins'
+    --font-poppins: 'Poppins';
+    --main-color: #2b2b2b;
 }
