@@ -13,7 +13,7 @@ const routeOptions: routeOptions[] = [
   {routeName: 'DashBoard View', name: 'DashBoard'},
   {routeName: 'Investment View', name: 'Investments'},
   {routeName: 'Reports View', name: 'Reports'}
-]
+] 
 
 const handleDropDownState = ():void => {
   dropDownState.value = !dropDownState.value
