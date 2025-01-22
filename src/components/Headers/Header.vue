@@ -16,8 +16,8 @@ const routeOptions: routeOptions[] = [
 ]
 
 const handleDropDownState = ():void => {
-  dropDownState.value = !dropDownState.value 
-}
+  dropDownState.value = !dropDownState.value
+} 
 
 const redirectToView = (routeToRedirect: string): void => {
   handleDropDownState()
