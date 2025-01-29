@@ -9,13 +9,25 @@ const router = createRouter({
       component: () => import('../views/DashBoard.vue'),
     },
     {
-      path: '/expenses',
-      name: 'Expenses View',
-      component: () => import('../views/Expenses.vue')
+      path: '/transactions',
+      name: 'Transactions View',
+      component: () => import('../views/Transactions.vue'),
+      children: [
+        {
+          path: 'expenses',
+          name: 'Expenses View',
+          component: () => import('../views/Expenses.vue')
+        },
+        {
+          path: 'incomes',
+          name: 'Incomes View',
+          component: () => import('../views/Incomes.vue')
+        },
+      ]
     },
     {
-      path: '/investment',
-      name: 'Investment View',
+      path: '/savings',
+      name: 'Savings View',
       component: () => import('../views/Investment.vue')
     },
     {

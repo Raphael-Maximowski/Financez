@@ -1,6 +1,14 @@
 export interface routeOptions {
-    route: string,
-    name: string
+    title: string,
+    value: string,
+    percentage: string,
+    routeName: string
+}
+
+export interface dropDownOptionInterface {
+    optionName: string,
+    optionValue: string,
+    id: number
 }
 
 export interface userConfigStore {
