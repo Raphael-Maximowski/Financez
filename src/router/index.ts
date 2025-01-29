@@ -6,23 +6,8 @@ const router = createRouter({
     {
       path: '/',
       name: 'DashBoard View',
-      component: () => import('../views/DashBoard.vue'),
+      component: () => import('../views/DashBoardView.vue'),
     },
-    {
-      path: '/expenses',
-      name: 'Expenses View',
-      component: () => import('../views/Expenses.vue')
-    },
-    {
-      path: '/investment',
-      name: 'Investment View',
-      component: () => import('../views/Investment.vue')
-    },
-    {
-      path: '/reports',
-      name: 'Reports View',
-      component: () => import('../views/Reports.vue')
-    }
   ],
 })
 
