@@ -1,9 +1,11 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 </script>
 
 <template>
-  <div>Expenses</div>
+  <div>
+    Incomes
+  </div>
 </template>
 
 <style scoped>

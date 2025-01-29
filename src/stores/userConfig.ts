@@ -12,8 +12,6 @@ export const userConfigStore = defineStore('userConfig', () => {
 
     const setUserConfigWidth = (userWidthViewIncome: number):void => {
         userConfigData.userWidth = userWidthViewIncome
-
-        console.log("State Set: ", userConfigData.userWidth)
     }
 
 

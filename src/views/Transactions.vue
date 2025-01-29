@@ -1,11 +1,10 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 </script>
 
 <template>
-  <div>Expenses</div>
+  <div><RouterView /> </div>
 </template>
 
 <style scoped>
-
 </style>

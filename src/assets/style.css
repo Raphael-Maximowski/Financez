@@ -9,3 +9,12 @@
     --font-poppins: 'Poppins';
     --main-color: #2b2b2b;
 }
+
+.light-border {
+    border: 1px solid lightgray;
+}
+
+.small-text {
+    font-size: 12px;
+    color: gray;
+}

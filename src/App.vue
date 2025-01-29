@@ -19,15 +19,17 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div style="font-family: var(--font-poppins)"
-       class="d-flex flex-column body-component vw-100 vh-100">
+  <div class="app-container overflow-y-auto d-flex flex-column vw-100 vh-100 px-5">
     <Header />
-    <RouterView />
+    <div class=" flex-grow-1  my-4">
+      <RouterView />
+    </div>
   </div>
 </template>
 
 <style scoped>
-.body-component {
-  background-color: #2b2b2b;
+.app-container {
+  font-family: Poppins;
+  background-color: rgba(211, 211, 211, 0.17);
 }
 </style>
