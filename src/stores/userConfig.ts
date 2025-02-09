@@ -2,18 +2,16 @@ import {defineStore} from "pinia";
 import {computed, reactive, ref} from "vue";
 import type {userConfigStore} from "@/TypeScript/Interfaces/interfaces.ts";
 
-export const userConfigStore = defineStore('userConfig', () => {
+export const userConfigModule = defineStore('userConfig', () => {
 
-    const userConfigData: userConfigStore = reactive({
+    const userConfigData: userConfigStore = ref({
         userWidth: window.innerWidth
     })
 
-    const userWidthGetter: number = computed(() => userConfigData.userWidth)
+    const userWidthGetter: number = computed(() => userConfigData.value.userWidth)
 
     const setUserConfigWidth = (userWidthViewIncome: number):void => {
-        userConfigData.userWidth = userWidthViewIncome
-
-        console.log("State Set: ", userConfigData.userWidth)
+        userConfigData.value.userWidth = userWidthViewIncome
     }
 
 

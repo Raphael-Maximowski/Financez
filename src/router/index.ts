@@ -6,22 +6,30 @@ const router = createRouter({
     {
       path: '/',
       name: 'DashBoard View',
-      component: () => import('../views/DashBoard.vue'),
+      component: () => import('../views/DashBoardView.vue'),
     },
     {
-      path: '/expenses',
-      name: 'Expenses View',
-      component: () => import('../views/Expenses.vue')
-    },
-    {
-      path: '/investment',
-      name: 'Investment View',
-      component: () => import('../views/Investment.vue')
-    },
-    {
-      path: '/reports',
-      name: 'Reports View',
-      component: () => import('../views/Reports.vue')
+      path: '/transactions',
+      name: 'Transactions Management View',
+      component: () => import('../views/TransactionsControl/TransactionsControlView.vue'),
+      children: [
+        {
+          path: 'expenses',
+          name: 'Expenses Management View',
+          component: () => import('../views/TransactionsControl/ExpensesControlView.vue')
+        },
+        {
+          path: 'incomes',
+          name: 'Incomes Management View',
+          component: () => import('../views/TransactionsControl/IncomesControlView.vue')
+        },
+        {
+          path: 'total-balance',
+          name: 'Total Balance Management View',
+          component: () => import('../views/TransactionsControl/TotalBalanceControl.vue')
+        },
+
+      ]
     }
   ],
 })
