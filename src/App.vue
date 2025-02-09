@@ -1,33 +1,27 @@
-<script setup lang="ts">
-import Header from "@/components/Headers/Header.vue";
-import {onBeforeUnmount, onMounted} from "vue";
-import {userConfigStore} from "@/stores/userConfig.ts";
-
-const userConfigManagement = userConfigStore()
-
-const handleUserResize = () => {
-  userConfigManagement.setUserConfigWidth(window.innerWidth)
-}
-
-onMounted(() => {
-  window.addEventListener('resize', handleUserResize)
-})
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', handleUserResize)
-})
+<script lang="ts" setup>
+import Header from "@/components/Header.vue";
+import TransactionModal from "@/components/Modals/TransactionModal.vue";
+import {modalModule} from "@/stores/modalModule.ts";
 </script>
 
 <template>
-  <div style="font-family: var(--font-poppins)"
-       class="d-flex flex-column body-component vw-100 vh-100">
+  <div class="vw-100 px-4 vh-100 overflow-y-auto wrapper-container">
     <Header />
-    <RouterView />
+    <div class="w-100 py-4 content-container">
+      <RouterView />
+    </div>
   </div>
+
+  <TransactionModal/>
 </template>
 
 <style scoped>
-.body-component {
-  background-color: #2b2b2b;
+.wrapper-container {
+  background-color: rgba(211, 211, 211, 0.1);
+  font-family: Poppins;
+}
+
+.content-container {
+  height: 92vh;
 }
 </style>
