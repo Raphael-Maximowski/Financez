@@ -1,0 +1,28 @@
+.form-control:focus {
+    box-shadow: none;
+    border: 1px solid lightgray;
+}
+
+.form-select:focus {
+    box-shadow: none;
+    border: 1px solid lightgray;
+}
+
+.custom-side-bar::-webkit-scrollbar {
+    width: 11px;
+}
+
+.custom-side-bar::-webkit-scrollbar-track {
+    background: var(--blue-4);
+    border-radius: 20px;
+}
+
+.custom-side-bar::-webkit-scrollbar-thumb {
+    width: 11px;
+    background-color: #1B557A24;
+    border-radius: 20px;
+}
+
+.modalBackground {
+    background-color:  rgba(0, 0, 0, 0.5);
+}
