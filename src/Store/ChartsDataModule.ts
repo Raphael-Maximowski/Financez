@@ -5,6 +5,7 @@ export const chartsDataModule = defineStore('chartsDataModule', () => {
 
     const chartData = ref({
         tableTransactionsData: [],
+        tableTitle: '',
         chartConfig: {
             lineDataSets: [],
             lineLabels: [],
@@ -12,10 +13,16 @@ export const chartsDataModule = defineStore('chartsDataModule', () => {
         },
     })
 
+    const tableTitleGetter = computed(() => chartData.value.tableTitle)
     const doughnutDataSetGetter = computed(() => chartData.value.chartConfig.doughnutDataSet)
     const tableTransactionsGetter = computed(() => chartData.value.tableTransactionsData)
     const lineDataSetsGetter = computed(() => chartData.value.chartConfig.lineDataSets)
     const lineLabelsGetter = computed(() => chartData.value.chartConfig.lineLabels)
+
+    const setTableTitle = (tableTitle) => {
+        if (!tableTitle) return
+        chartData.value.tableTitle = tableTitle
+    }
 
     const setDoughnutData = (dataSet) => {
         if (!dataSet) return
@@ -41,5 +48,7 @@ export const chartsDataModule = defineStore('chartsDataModule', () => {
         setTransactionsTableData,
         setDoughnutData,
         setLineChartConfig,
+        setTableTitle,
+        tableTitleGetter
     }
 })

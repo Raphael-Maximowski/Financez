@@ -29,6 +29,7 @@ const setDataBasedInRoute = async () => {
   const sortedExpenses = [...expensesData.value].sort((a, b) => a.notFormatedDate - b.notFormatedDate)
 
   if (route.name === 'DashBoard View') {
+    chartModule.setTableTitle('Pendent Transactions')
     chartModule.setTransactionsTableData(expensesData.value.filter((t) => t.state === 'Pendent'))
     return
   }
@@ -84,6 +85,7 @@ const setDataBasedInRoute = async () => {
         ]
       }
 
+      chartModule.setTableTitle('Total Balance')
       chartModule.setDoughnutData(doughnutTotalBalanceDataSet)
       chartModule.setTransactionsTableData(transactionsData.value)
       chartModule.setLineChartConfig(dataSetsTotalBalance, uniqueDates)
@@ -114,6 +116,7 @@ const setDataBasedInRoute = async () => {
         ]
       }
 
+      chartModule.setTableTitle('Expenses')
       chartModule.setDoughnutData(doughnutExpensesDataSet)
       chartModule.setTransactionsTableData(expensesData.value)
       chartModule.setLineChartConfig(dataSetsExpenses, sortedExpenses.map(e => e.date))
@@ -143,6 +146,7 @@ const setDataBasedInRoute = async () => {
         ]
       }
 
+      chartModule.setTableTitle('Incomes')
       chartModule.setDoughnutData(doughnutIncomesDataSets)
       chartModule.setTransactionsTableData(incomesData.value)
       chartModule.setLineChartConfig(dataSetsIncomes, sortedIncomes.map(i => i.date))
