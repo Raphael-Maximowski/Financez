@@ -7,8 +7,8 @@ import money from 'v-money3'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "vue3-toastify/dist/index.css";
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import '@/assets/style.css'
 import 'bootstrap'
+import '@/assets/styles.css'
 import 'v-calendar/style.css';
 
 const app = createApp(App)
