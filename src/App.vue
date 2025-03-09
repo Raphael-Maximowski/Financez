@@ -24,9 +24,9 @@ const setUserWidth = (): void => {
 }
 
 const setDataBasedInRoute = async () => {
-
   const sortedIncomes = [...incomesData.value].sort((a, b) => a.notFormatedDate - b.notFormatedDate)
   const sortedExpenses = [...expensesData.value].sort((a, b) => a.notFormatedDate - b.notFormatedDate)
+  const sortedTransactions = [...incomesData.value, ...expensesData.value].sort((a, b) => a.notFormatedDate - b.notFormatedDate)
 
   if (route.name === 'DashBoard View') {
     chartModule.setTransactionsTableData(expensesData.value.filter((t) => t.state === 'Pendent'))
@@ -35,20 +35,21 @@ const setDataBasedInRoute = async () => {
 
   switch (route.params.typeTransaction) {
     case 'total-balance':
-      const uniqueDates = Array.from(
-          new Set([...sortedExpenses.map(e => e.date), ...sortedIncomes.map(i => i.date)])
-      )
+      const uniqueDates = [
+          ...new Set(sortedTransactions.map(sortedTransaction => sortedTransaction.date))
+      ]
 
+        const orderedExpenses = uniqueDates.map((uniqueDate) => {
+          const expense = sortedExpenses.filter((sortedExpenses) => sortedExpenses.date === uniqueDate)
+              .reduce((acc ,item) => acc + parseInt(item.value), 0)
+          return expense ? expense : 0
+        })
 
-      const orderedIncomes = uniqueDates.map(ud => {
-        const income = sortedIncomes.find(i => i.date === ud)
-        return income ? income.value : 0
-      })
-
-      const orderedExpenses = uniqueDates.map(ud => {
-        const expense = sortedExpenses.find(e => e.date === ud)
-        return expense ? expense.value : 0
-      })
+        const orderedIncomes = uniqueDates.map((uniqueDate) => {
+          const income = sortedIncomes.filter((sortedIncome) => sortedIncome.date === uniqueDate).
+              reduce((acc, item) => acc + parseInt(item.value), 0)
+          return income? income : 0
+        })
 
       const totalBalanceDoughnutData = [0, 0, 0, 0]
       expensesData.value.map(e => {
@@ -96,10 +97,21 @@ const setDataBasedInRoute = async () => {
       })
 
 
+        const uniqueDatesExpenses = [
+            ...new Set(sortedExpenses.map((sortedExpenses) => sortedExpenses.date))
+        ]
+
+        const expensesDataFiltered = uniqueDatesExpenses.map((uniqueDate) => {
+          const expenses = sortedExpenses.filter((sortedExpense) => sortedExpense.date === uniqueDate)
+              .reduce((acc, item) => acc + parseInt(item.value), 0)
+
+          return expenses ? expenses : 0
+        })
+
       const dataSetsExpenses = [
         {
           label: 'Expenses',
-          data: sortedExpenses.map(e => e.value),
+          data: expensesDataFiltered,
           backgroundColor: '#DC3545'
         },
       ]
@@ -116,7 +128,7 @@ const setDataBasedInRoute = async () => {
 
       chartModule.setDoughnutData(doughnutExpensesDataSet)
       chartModule.setTransactionsTableData(expensesData.value)
-      chartModule.setLineChartConfig(dataSetsExpenses, sortedExpenses.map(e => e.date))
+      chartModule.setLineChartConfig(dataSetsExpenses, uniqueDatesExpenses)
       break;
     case 'incomes':
       const incomesDoughnutData = [0, 0]
@@ -125,10 +137,21 @@ const setDataBasedInRoute = async () => {
         incomesDoughnutData[1] += parseInt(i.value)
       })
 
+        const uniqueDatesIncomes = [
+            ...new Set(sortedIncomes.map((sortedIncome) => sortedIncome.date))
+        ]
+
+        const incomesDataFiltered = uniqueDatesIncomes.map((uniqueDate) => {
+          const income = sortedIncomes.filter((sortedIncome) => sortedIncome.date === uniqueDate)
+              .reduce((acc, item) => acc + parseInt(item.value), 0)
+
+          return income ? income : 0
+        })
+
       const dataSetsIncomes = [
         {
           label: 'Incomes',
-          data: sortedIncomes.map(i => i.value),
+          data: incomesDataFiltered,
           backgroundColor: '#28A745'
         },
       ]
@@ -145,7 +168,7 @@ const setDataBasedInRoute = async () => {
 
       chartModule.setDoughnutData(doughnutIncomesDataSets)
       chartModule.setTransactionsTableData(incomesData.value)
-      chartModule.setLineChartConfig(dataSetsIncomes, sortedIncomes.map(i => i.date))
+      chartModule.setLineChartConfig(dataSetsIncomes, uniqueDatesIncomes)
       break;
   }
 }
@@ -156,7 +179,7 @@ watch(transactionsData, () => {
 
 watch(route, async () => {
   if (route.name === 'DashBoard View') await transactionsModule.setTimeRange(handleTimeRange('month'))
-  setDataBasedInRoute()
+  await setDataBasedInRoute()
 })
 
 onBeforeMount(async () => {

@@ -12,7 +12,7 @@ defineProps({
       <p class="mb-0">{{ transaction.name }}</p>
       <p class="mb-0 small-letters text-secondary">{{ transaction.date }}</p>
     </div>
-    <p :class="[ transaction.type === 'Expense' ? 'text-danger' : 'text-success', 'mb-0']">R$ {{ transaction.value }}</p>
+    <p :class="[ transaction.type === 'Expense' ? 'text-danger' : 'text-success', 'mb-0']">U$ {{ transaction.value }}</p>
   </div>
 </template>
 
