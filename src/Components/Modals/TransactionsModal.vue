@@ -5,15 +5,25 @@ import {useForm} from "vee-validate";
 import * as yup from 'yup';
 import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
 import {notificationModule} from "@/Store/NotificationModule.ts";
+import { unformat, format } from "v-money3";
 
 const modalManagement = modalManagementModule()
 const modalData = computed(() => modalManagement.modalDataGetter)
 const modalInEditMode = modalData.value ? true : false
 const transactionsManagement = transactionsDataModule()
 const notificationManagement = notificationModule()
-const stateOptions: string[] = [ 'Pendent', 'Paid', 'Received' ]
+const stateOptions: string[] = [ 'Pendent', 'Paid']
 const calendarState = ref<boolean>(false)
 const installmentState = ref<boolean>(false)
+const valueMockUp = ref()
+
+const moneyConfig = {
+  decimal: ',',
+  thousands: '.',
+  prefix: 'U$ ',
+  precision: 2,
+  masked: true
+}
 
 const validationSchema = yup.object({
   name: yup.string().required("Name Field is Required"),
@@ -67,12 +77,15 @@ const validateFormData = async ():Promise<boolean> => {
 
 const createTransaction = async () => {
   if (!await validateFormData()) return
+
+  const [day, month, year] = date.value.split("/").map(Number);
+
   const payload = {
     name: name.value,
-    value: value.value,
+    value: value.value.replace('.', ','),
     type: type.value,
     state: state.value,
-    notFormatedDate: new Date(),
+    notFormatedDate: new Date(year, month - 1, day),
     date: date.value,
     ...(installment.value && { installment: installment.value }),
     ...(description.value && { description: description.value })
@@ -92,13 +105,15 @@ const deleteTransaction = () => {
 const editTransaction = () => {
   if (!modalData.value) return
 
+  const [day, month, year] = date.value.split("/").map(Number);
+
   const payload = {
     id: modalData.value.id,
     name: name.value,
-    value: value.value,
+    value: value.value.replace('.', ','),
     type: type.value,
     state: state.value,
-    notFormatedDate: new Date(),
+    notFormatedDate: new Date(year, month - 1, day),
     date: date.value,
     ...(installment.value && { installment: installment.value }),
     ...(description.value && { description: description.value }),
@@ -111,6 +126,7 @@ const editTransaction = () => {
 
 const setVariablesToEdit = () => {
   if (!modalInEditMode) return
+  valueMockUp.value = format(modalData.value.value, moneyConfig)
   setValues({
     name: modalData.value.name,
     value: modalData.value.value,
@@ -121,6 +137,12 @@ const setVariablesToEdit = () => {
     ...(modalData.value.installment && {description: modalData.value.installment} )
   })
 }
+
+watch(valueMockUp, (newValue) => {
+  setValues({
+    value: unformat(newValue, moneyConfig)
+  })
+})
 
 onMounted(() => {
   setVariablesToEdit()
@@ -144,7 +166,7 @@ onMounted(() => {
             </div>
             <div class="w-25">
               <label>Value: </label>
-              <input v-model="value" class="form-control w-100"/>
+              <input v-money3="moneyConfig" v-model.lazy="valueMockUp" class="form-control w-100"/>
             </div>
           </div>
 
