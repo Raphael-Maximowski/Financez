@@ -33,6 +33,22 @@ export const transactionsDataModule = defineStore('transactionsDataModule', () =
             && t.notFormatedDate <= transactionsData.value.timeRange.endDate
         ))
 
+    const setTransactionsAsPaid = (transactionId, transactionType) => {
+        if (!transactionId || !transactionType) return
+        switch (transactionType && transactionType) {
+            case 'Expense' :
+                const expenseIndex = transactionsData.value.expenses.findIndex((expense) => expense.id === transactionId)
+                transactionsData.value.expenses[expenseIndex].state = 'Paid'
+                break;
+            case 'Income':
+                const incomeIndex = transactionsData.value.incomes.findIndex((income) => income.id === transactionId)
+                transactionsData.value.incomes[incomeIndex].state = 'Paid'
+                break;
+        }
+
+        notificationManagement.displaySuccessMessage("Transaction Status Changed!")
+    }
+
     const setTimeRange = (timeRange) => {
         if (!timeRange) return
         transactionsData.value.timeRange.startDate = timeRange.startDate
@@ -93,6 +109,7 @@ export const transactionsDataModule = defineStore('transactionsDataModule', () =
     }
 
     return {
+        setTransactionsAsPaid,
         setTransactionData,
         deleteTransaction,
         updateTransaction,
