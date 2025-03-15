@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
-import {expensesDataMockUp, incomesDataMockUp} from "@/Data/TransactionsMockUp.ts";
+import {expensesDataMockUp, goalsMockUp, incomesDataMockUp, savingsDataMockUp} from "@/Data/TransactionsMockUp.ts";
 import {notificationModule} from "@/Store/NotificationModule.ts";
 
 export const transactionsDataModule = defineStore('transactionsDataModule', () => {
@@ -10,13 +10,20 @@ export const transactionsDataModule = defineStore('transactionsDataModule', () =
     const transactionsData = ref({
         expenses: expensesDataMockUp,
         incomes: incomesDataMockUp,
-        savings: [],
+        savings: savingsDataMockUp,
+        goals: goalsMockUp,
         timeRange: {
             startDate: '',
             endDate: ''
         }
     })
 
+    const goalsDataGetter = computed(() => transactionsData.value.goals)
+    const savingsDataGetter = computed(() => transactionsData.value.savings
+        .sort((a, b) => b.notFormatedDate - a.notFormatedDate)
+        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
+            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        ))
     const expensesDataGetter = computed(() => transactionsData.value.expenses
         .sort((a ,b) => b.notFormatedDate - a.notFormatedDate)
         .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
@@ -109,7 +116,9 @@ export const transactionsDataModule = defineStore('transactionsDataModule', () =
     }
 
     return {
+        savingsDataGetter,
         setTransactionsAsPaid,
+        goalsDataGetter,
         setTransactionData,
         deleteTransaction,
         updateTransaction,

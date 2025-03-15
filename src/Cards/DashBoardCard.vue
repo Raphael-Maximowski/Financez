@@ -15,8 +15,9 @@ const dashBoardData = computed(() => dashBoardManagement.dashboardDataGetter)
 const tooltipRef = ref()
 
 
-const redirectUser = (dashBoardParam) => {
-  router.push({ name: 'Metrics View', params: { typeTransaction: dashBoardParam } })
+const redirectUser = (dashBoard) => {
+  dashBoard.routerParams ?  router.push({ name: 'Metrics View', params: { typeTransaction: dashBoard.routerParams} })
+      : router.push({ name: 'Savings View' })
 }
 
 const initializeToolTip = () => {
@@ -49,7 +50,7 @@ watch(userWidth, (newValue: number): void => {
         :key="index"
         :style="{ width: containerWidth }"
         class="px-4 py-3 position-relative rounded-1 content-container"
-        @click="redirectUser(data.routerParams)"
+        @click="redirectUser(data)"
     >
       <i :class="[ data.icon, 'icon position-absolute bi']"></i>
       <div class="d-flex align-items-center">

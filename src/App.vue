@@ -26,11 +26,17 @@ const setUserWidth = (): void => {
 const setDataBasedInRoute = async () => {
   const sortedIncomes = [...incomesData.value].sort((a, b) => a.notFormatedDate - b.notFormatedDate)
   const sortedExpenses = [...expensesData.value].sort((a, b) => a.notFormatedDate - b.notFormatedDate)
-  const sortedTransactions = [...incomesData.value, ...expensesData.value].sort((a, b) => a.notFormatedDate - b.notFormatedDate)
 
   if (route.name === 'DashBoard View') {
     chartModule.setTableTitle('Pendent Transactions')
     chartModule.setTransactionsTableData(expensesData.value.filter((t) => t.state === 'Pendent'))
+    return
+  }
+
+  if (route.name === 'Savings View') {
+
+    
+
     return
   }
 

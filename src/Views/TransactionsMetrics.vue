@@ -5,11 +5,20 @@ import MetricsLine from "@/Components/Charts/MetricsLine.vue";
 import MetricDoughnut from "@/Components/Charts/MetricDoughnut.vue";
 import {chartsDataModule} from "@/Store/ChartsDataModule.ts";
 import {computed, onMounted, watch} from "vue";
+import {useRoute} from "vue-router";
+import GoalCard from "@/Components/Card/GoalCard.vue";
+import {savingsModule} from "@/Store/SavingsModule.ts";
+import Goals from "@/Components/Field/Goals.vue";
+import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
 
 const chartsModule = chartsDataModule()
+const transactionsManagement = transactionsDataModule()
 const chartsTransactions = computed(() => chartsModule.chartTransactionsGetter)
 const chartsSettings = computed(() => chartsModule.chartConfigGetter)
 const chartsLineDataSets = computed(() => chartsModule.chartConfigDataSetsGetter)
+const route = useRoute()
+const isInSavingsView = route.name === 'Savings View'
+const goalsData = computed(() => transactionsManagement.goalsDataGetter)
 </script>
 
 <template>
@@ -32,8 +41,13 @@ const chartsLineDataSets = computed(() => chartsModule.chartConfigDataSetsGetter
           />
         </div>
       </div>
-      <div class="d-flex align-items-center justify-content-center col-xxl-3 col-12 h-100">
-        <MetricDoughnut />
+      <div class="col-xxl-3 col-12 h-100">
+        <div v-if="!isInSavingsView" class="w-100 h-100 d-flex align-items-center justify-content-center ">
+          <MetricDoughnut/>
+        </div>
+        <div v-else>
+          <GoalCard v-for="goal in goalsData" :goal="goal"/>
+        </div>
       </div>
     </div>
   </div>

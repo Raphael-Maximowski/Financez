@@ -69,3 +69,47 @@ export const expensesDataMockUp = [
     { id: 32, name: 'Expense 32', value: '1300,00', state: 'Pendent', type: 'Expense', notFormatedDate: new Date(2025, 2, 17), date: '17/03/2025' },
     { id: 33, name: 'Expense 33', value: '1000,00', state: 'Paid', type: 'Expense', notFormatedDate: new Date(2025, 2, 19), date: '19/03/2025' },
 ];
+
+export const goalsMockUp = [
+    { id: 1, name: 'Emergency Money', value: '10000,00'},
+    { id: 2, name: 'Buy a Car', value: '40000,00' },
+    { id: 3, name: 'Invest in Cripto', value: '3000,00' },
+    { id: 4, name: 'Buy a House', value: '150000,00' },
+    { id: 5, name: 'Upgrade my Computer', value: '1000,00'}
+]
+
+export const savingsDataMockUp = [
+    { id: 1, name: 'Emergency Money', value: '500,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 1), date: '01/01/2025' },
+    { id: 2, name: 'Buy a House', value: '200,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 6), date: '06/01/2025' },
+    { id: 3, name: 'Invest in Cripto', value: '250,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 7), date: '07/01/2025' },
+    { id: 4, name: 'Invest in Cripto', value: '800,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 15), date: '15/01/2025' },
+    { id: 5, name: 'Emergency Money', value: '600,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 17), date: '17/01/2025' },
+    { id: 6, name: 'Buy a House', value: '300,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 20), date: '20/01/2025' },
+    { id: 7, name: 'Buy a House', value: '400,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 21), date: '21/01/2025' },
+    { id: 8, name: 'Emergency Money', value: '550,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 22), date: '22/01/2025' },
+    { id: 9, name: 'Emergency Money', value: '220,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 25), date: '25/01/2025' },
+    { id: 10, name: 'Invest in Cripto', value: '900,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 27), date: '27/01/2025' },
+    { id: 11, name: 'Emergency Money', value: '320,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 28), date: '28/01/2025' },
+    { id: 12, name: 'Upgrade my Computer', value: '700,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 0, 29), date: '29/01/2025' },
+    { id: 13, name: 'Buy a House', value: '430,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 2), date: '02/02/2025' },
+    { id: 14, name: 'Buy a Car', value: '510,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 5), date: '05/02/2025' },
+    { id: 15, name: 'Emergency Money', value: '850,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 7), date: '07/02/2025' },
+    { id: 16, name: 'Buy a Car', value: '300,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 8), date: '08/02/2025' },
+    { id: 17, name: 'Emergency Money', value: '620,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 11), date: '11/02/2025' },
+    { id: 18, name: 'Emergency Money', value: '1200,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 15), date: '15/02/2025' },
+    { id: 19, name: 'Upgrade my Computer', value: '1100,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 16), date: '16/02/2025' },
+    { id: 20, name: 'Upgrade my Computer', value: '770,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 17), date: '17/02/2025' },
+    { id: 21, name: 'Buy a Car', value: '2000,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 21), date: '21/02/2025' },
+    { id: 22, name: 'Emergency Money', value: '450,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 25), date: '25/02/2025' },
+    { id: 23, name: 'Upgrade my Computer', value: '330,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 26), date: '26/02/2025' },
+    { id: 24, name: 'Emergency Money', value: '290,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 1, 27), date: '27/02/2025' },
+    { id: 25, name: 'Emergency Money', value: '180,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 2, 9), date: '09/03/2025' },
+    { id: 26, name: 'Buy a House', value: '900,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 2, 10), date: '10/03/2025' },
+    { id: 27, name: 'Upgrade my Computer', value: '620,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 2, 15), date: '15/03/2025' },
+    { id: 28, name: 'Upgrade my Computer', value: '990,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 2, 17), date: '17/03/2025' },
+    { id: 29, name: 'Invest in Cripto', value: '780,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 2, 20), date: '20/03/2025' },
+    { id: 30, name: 'Buy a House', value: '870,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 2, 22), date: '22/03/2025' },
+    { id: 31, name: 'Buy a House', value: '1500,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 2, 25), date: '25/03/2025' },
+    { id: 32, name: 'Upgrade my Computer', value: '450,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 2, 27), date: '27/03/2025' },
+    { id: 33, name: 'Invest in Cripto', value: '550,00', state: 'Paid', type: 'Saving', notFormatedDate: new Date(2025, 2, 28), date: '28/03/2025' }
+];
