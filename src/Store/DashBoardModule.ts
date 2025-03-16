@@ -9,10 +9,10 @@ export const dashBoardModule = defineStore('dashBoardModule', () => {
     const expensesData = computed(() => transactionsManagement.expensesDataGetter)
 
     const dashboardData = ref([
-        {name: 'Total Balance', value: 0, routerParams: 'total-balance', percentage: 0},
-        {name: 'Income', value: 0, routerParams: 'incomes', percentage: 0},
-        {name: 'Expense', value: 0, routerParams: 'expenses', percentage: 0},
-        {name: 'Saving', value: 0, routerParams: '', percentage: 0}
+        {name: 'Total Balance', value: 0, routerParams: 'total-balance',icon: 'bi-currency-dollar', text: 'Final balance of the month.'},
+        {name: 'Income', value: 0, routerParams: 'incomes', icon: 'bi-arrow-up-right-square', text: 'Amount saved.'},
+        {name: 'Expense', value: 0, routerParams: 'expenses', icon: 'bi-credit-card', text: 'Total expenses this month.'},
+        {name: 'Saving', value: 0, routerParams: '', icon: 'bi-cursor-fill', text: 'Amount invested this month.'}
     ])
 
     const dashboardDataGetter = computed(() => dashboardData.value)
