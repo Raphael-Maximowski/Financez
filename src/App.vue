@@ -175,7 +175,7 @@ const setDataBasedInRoute = async () => {
 
 watch(transactionsData, () => {
   setDataBasedInRoute()
-})
+}, { deep: true })
 
 watch(route, async () => {
   if (route.name === 'DashBoard View') await transactionsModule.setTimeRange(handleTimeRange('month'))
