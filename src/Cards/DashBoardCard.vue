@@ -51,7 +51,7 @@ watch(userWidth, (newValue: number): void => {
         class="px-4 py-3 position-relative rounded-1 content-container"
         @click="redirectUser(data.routerParams)"
     >
-      <i class="position-absolute bi bi-arrow-up-right-square"></i>
+      <i :class="[ data.icon, 'icon position-absolute bi']"></i>
       <div class="d-flex align-items-center">
         <h3 class="m-0 fs-6">{{ data.name }}</h3>
         <i
@@ -62,7 +62,7 @@ watch(userWidth, (newValue: number): void => {
             class="ms-2 info-icon bi bi-info-circle-fill"></i>
       </div>
       <h4 class="my-2 fs-4 fw-bold"> U$ {{ data.value }} </h4>
-      <h5 class="m-0 fs-6 text-secondary"> {{ data.percentage }}% </h5>
+      <h5 class="m-0 text-secondary"> {{ data.text }}</h5>
     </div>
   </div>
 </template>
@@ -72,11 +72,15 @@ watch(userWidth, (newValue: number): void => {
   font-size: 16px;
 }
 
+.text-secondary {
+  font-size: 14px;
+}
+
 .wrapper-container {
   gap: 15px;
 }
 
-.bi-arrow-up-right-square {
+.icon {
   top: 15px;
   right: 15px;
 }
@@ -91,7 +95,7 @@ watch(userWidth, (newValue: number): void => {
   transition: 0.5s;
 }
 
-.content-container:hover .bi-arrow-up-right-square {
+.content-container:hover .icon {
   font-size: 18px;
 
 }
