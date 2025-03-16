@@ -42,7 +42,7 @@ watch(transactionsData, () => {
 
 <style scoped>
 .transaction-container {
-  height: 80vh;
+  height: 75vh;
 }
 
 .doughnut-container {
