@@ -1,7 +1,7 @@
 <script setup>
 import { Chart as ChartJS, CategoryScale,  LinearScale,  PointElement,  LineElement,  Title,  Tooltip,  Legend } from 'chart.js'
 import { Line } from 'vue-chartjs'
-import {computed} from "vue";
+import {computed, onMounted} from "vue";
 import {chartsDataModule} from "@/Store/ChartsDataModule.ts";
 ChartJS.register( CategoryScale,  LinearScale,  PointElement,  LineElement,  Title,  Tooltip,  Legend )
 
@@ -18,11 +18,10 @@ const options = {
   responsive: true,
   maintainAspectRatio: false
 }
-
 </script>
 
 <template>
-  <div class="w-100 h-100">
+  <div class="w-100  h-100">
     <Line :data="chartSetup" :options="options" />
   </div>
 </template>

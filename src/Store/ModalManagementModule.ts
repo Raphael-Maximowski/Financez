@@ -13,11 +13,10 @@ export const modalManagementModule = defineStore('modalManagementModule', () => 
     const modalNameGetter = computed(() => modalManagementData.value.modalName)
     const modalDataGetter = computed(() => modalManagementData.value.modalInternData)
 
-    const setModalState =(modalData: boolean): void => {
-        modalManagementData.value.modalState = modalData.state
-        modalManagementData.value.modalName = modalData.name ? modalData.name : null
-        modalManagementData.value.modalInternData = modalData.extraData ? modalData.extraData : null
-
+    const setModalState = (modalData: boolean): void => {
+        modalManagementData.value.modalState = !!modalData
+        modalManagementData.value.modalName = modalData?.name || null
+        modalManagementData.value.modalInternData = modalData?.extraData || null
     }
 
     return {

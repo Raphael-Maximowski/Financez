@@ -11,10 +11,14 @@ const transactionsManagement = transactionsDataModule()
 const timeRange = ref('week')
 
 const setActualRoute = () => {
-  typeMetrics.value = route.params.typeTransaction
+  typeMetrics.value = route.params.typeTransaction || 'savings'
 }
 
 const redirectUser = (routeParam) => {
+  if (routeParam === 'savings') {
+    router.push({ name: 'Savings View' })
+    return
+  }
   router.push({name: 'Metrics View', params: {typeTransaction: routeParam}})
 }
 
@@ -44,6 +48,7 @@ watch(typeMetrics, (newValue) => {
         <option value="total-balance">Total Balance</option>
         <option value="expenses">Expenses</option>
         <option value="incomes">Incomes</option>
+        <option value="savings">Savings</option>
       </select>
     </div>
 
