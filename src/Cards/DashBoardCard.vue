@@ -16,7 +16,12 @@ const tooltipRef = ref()
 
 
 const redirectUser = (dashBoardParam) => {
-  router.push({ name: 'Metrics View', params: { typeTransaction: dashBoardParam } })
+  if (dashBoardParam) {
+    router.push({ name: 'Metrics View', params: { typeTransaction: dashBoardParam } })
+    return
+  }
+
+  router.push({ name: 'Savings View' })
 }
 
 const initializeToolTip = () => {

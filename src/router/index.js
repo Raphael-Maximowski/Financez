@@ -12,6 +12,11 @@ const router = createRouter({
             path: '/transactions/:typeTransaction',
             name: 'Metrics View',
             component: () => import('../Views/TransactionsMetrics.vue')
+        },
+        {
+            path: '/savings',
+            name: 'Savings View',
+            component: () => import('../Views/TransactionsMetrics.vue')
         }
     ],
 })

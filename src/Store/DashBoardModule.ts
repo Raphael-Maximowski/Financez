@@ -7,6 +7,7 @@ export const dashBoardModule = defineStore('dashBoardModule', () => {
     const transactionsManagement = transactionsDataModule()
     const incomesData = computed(() => transactionsManagement.incomesDataGetter)
     const expensesData = computed(() => transactionsManagement.expensesDataGetter)
+    const savingsData = computed(() => transactionsManagement.savingsDataGetter)
 
     const dashboardData = ref([
         {name: 'Total Balance', value: 0, routerParams: 'total-balance',icon: 'bi-currency-dollar', text: 'Final balance of the month.'},
@@ -20,9 +21,14 @@ export const dashBoardModule = defineStore('dashBoardModule', () => {
     const setDashBoardData = () => {
         let incomeValue = 0
         let expenseValue = 0
+        let savingValue = 0
 
         incomesData.value.forEach((t) => {
             incomeValue += parseInt(t.value)
+        })
+
+        savingsData.value.forEach((s) => {
+            savingValue += parseInt(s.value)
         })
 
         expensesData.value.forEach((t) => {
@@ -31,6 +37,7 @@ export const dashBoardModule = defineStore('dashBoardModule', () => {
 
         dashboardData.value[1].value = incomeValue
         dashboardData.value[2].value = expenseValue
+        dashboardData.value[3].value = savingValue
         dashboardData.value[0].value = parseInt(incomeValue - expenseValue)
     }
 
