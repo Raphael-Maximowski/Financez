@@ -8,6 +8,19 @@ const props = defineProps({
   transaction: { type: Object, required: true }
 })
 
+const transactionColor = () => {
+  switch (props.transaction.type) {
+    case 'Income':
+      return 'text-success'
+      break;
+    case 'Expense':
+      return 'text-danger'
+      break;
+    case 'Saving':
+      return 'text-dark'
+      break;
+  }
+}
 const changeTransactionState = () => {
   transactionsManagement.setTransactionsAsPaid(props.transaction.id, props.transaction.type)
 }
@@ -26,7 +39,7 @@ const changeTransactionState = () => {
         <i v-if="props.transaction.state === 'Pendent'" @click.stop="changeTransactionState" class="bi bi-check2-circle fs-6"></i>
       </p>
     </div>
-    <p :class="[ transaction.type === 'Expense' ? 'text-danger' : 'text-success', 'mb-0']">U$ {{ transaction.value }}</p>
+    <p :class="[ transactionColor(), 'mb-0']">U$ {{ transaction.value }}</p>
   </div>
 </template>
 
