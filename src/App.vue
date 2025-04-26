@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Header from "@/Components/Header.vue";
 import {userSettingsModule} from "@/Store/UserSettingsModule.ts";
-import {computed, onBeforeMount, onBeforeUnmount, onMounted, ref, watch} from "vue";
+import {computed, onBeforeMount, onBeforeUnmount , watch} from "vue";
 import TransactionsModal from "@/Components/Modals/TransactionsModal.vue";
 import {modalManagementModule} from "@/Store/ModalManagementModule.ts";
 import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
