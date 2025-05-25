@@ -32,19 +32,12 @@ const setUserWidth = (): void => {
 }
 
 const handleYearTimeRange = (transactions, colors) => {
-  let lastMonthRelatedToTransactions = []
+  let lastMonthRelatedToTransactions = 11
   const transactionsDataSets = []
-
-  Object.entries(transactions).forEach(([key, transactions]) => {
-    labelMonthsForLineChart.value = []
-
-    const lastTransactionRegistered = transactions[transactions.length -1 ].notFormatedDate
-    lastMonthRelatedToTransactions.push(lastTransactionRegistered.getMonth())
-  })
-  lastMonthRelatedToTransactions.length > 1 && (lastMonthRelatedToTransactions = Math.max(...lastMonthRelatedToTransactions))
+  labelMonthsForLineChart.value = []
 
   for (let i = 0; i < lastMonthRelatedToTransactions; i++) {
-    labelMonthsForLineChart.value.push(monthsArray[i + 1])
+    labelMonthsForLineChart.value.push(monthsArray[i])
   }
 
   Object.entries(transactions).forEach(([objectKey, transactions], index) => {
@@ -52,8 +45,8 @@ const handleYearTimeRange = (transactions, colors) => {
     const totalValuesRelatedToMonths = []
 
     for(let i = 0; i < lastMonthRelatedToTransactions; i ++) {
-      const firstDayOfMonth = new Date(2025, i + 1, 1)
-      const firstDayOfNextMonth = new Date(2025, i + 2, 1)
+      const firstDayOfMonth = new Date(2025, i, 1)
+      const firstDayOfNextMonth = new Date(2025, i + 1, 1)
 
       const totalValueRelatedToMonth = transactions.filter((t) => t.notFormatedDate >= firstDayOfMonth
           && t.notFormatedDate < firstDayOfNextMonth

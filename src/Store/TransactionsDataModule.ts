@@ -224,23 +224,68 @@ export const transactionsDataModule = defineStore('transactionsDataModule', () =
         notificationManagement.displaySuccessMessage("Transaction Excluded With Success")
     }
 
+    const handleTransactionInstallment = (transaction) => {
+        const originalTransaction = transaction
+        const originalTransactionDate = originalTransaction.notFormatedDate
+        const transactionAlreadyRegistered = 1
+        const installmentAmount = originalTransaction.installment - transactionAlreadyRegistered
+        for (let i = 0; i < installmentAmount; i++) {
+            let transactionYearBasedInInstallment = originalTransactionDate.getFullYear()
+            let transactionMonthBasedInInstallment = originalTransactionDate.getMonth() + (i + 1)
+            if (transactionMonthBasedInInstallment > 11) {
+                const yearDivisor = Math.floor(transactionMonthBasedInInstallment / 12);
+                transactionYearBasedInInstallment += yearDivisor
+                transactionMonthBasedInInstallment = transactionMonthBasedInInstallment % 12;
+            }
+
+            const { notFormatedDate, date, id, installment,...transactionToPushRest } = originalTransaction
+            const transactionToPush = {
+                ...transactionToPushRest,
+                id: originalTransaction.id + (i + 1),
+                installment: originalTransaction.installment - (i + 1),
+                date: `01/${String(transactionMonthBasedInInstallment + 1).padStart(2, '0')}/${transactionYearBasedInInstallment}`,
+                notFormatedDate: new Date(transactionYearBasedInInstallment, transactionMonthBasedInInstallment, 1)
+            }
+
+            if (originalTransaction.type === 'Income') {
+                transactionsData.value.incomes.push(transactionToPush)
+            } else {
+                transactionsData.value.expenses.push(transactionToPush)
+            }
+        }
+    }
+
     const setTransactionData = (transactionData) => {
         switch (transactionData.type) {
             case 'Income':
                 const incomeId = transactionsData.value.incomes.length === 0 ? 1 : transactionsData.value.incomes[transactionsData.value.incomes.length - 1].id + 1
-                const incomeToPush = {
+                let incomeToPush = {
                     ...transactionData,
                     id: incomeId
                 }
-                transactionData && (transactionsData.value.incomes.push(incomeToPush))
+
+                if(incomeToPush.installment) {
+                    incomeToPush.value = (parseFloat(incomeToPush.value) / incomeToPush.installment)
+                        .toFixed(2)
+                        .replace(".", ",")
+                    handleTransactionInstallment(incomeToPush)
+                }
+                transactionsData.value.incomes.push(incomeToPush)
                 break;
             case 'Expense':
                 const expenseId = transactionsData.value.expenses.length === 0 ? 1 : transactionsData.value.expenses[transactionsData.value.expenses.length - 1].id + 1
-                const expenseToPush = {
+                let expenseToPush = {
                     ...transactionData,
                     id: expenseId
                 }
-                transactionData && (transactionsData.value.expenses.push(expenseToPush))
+
+                if(expenseToPush?.installment) {
+                    expenseToPush.value = (parseFloat(expenseToPush.value) / expenseToPush.installment)
+                        .toFixed(2)
+                        .replace(".", ",")
+                    handleTransactionInstallment(expenseToPush)
+                }
+                transactionsData.value.expenses.push(expenseToPush)
                 break;
         }
 
