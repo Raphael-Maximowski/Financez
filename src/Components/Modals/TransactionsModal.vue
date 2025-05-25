@@ -30,7 +30,7 @@ const validationSchema = yup.object({
   value: yup.string().required("Value Field is Required"),
   type: yup.string().required("Type Field is Required"),
   state: yup.string().required("State Field is Required"),
-  installment: yup.number().optional(),
+  installment: yup.number().optional().min(1, "Insert a Valid Installment"),
   date: yup.string().required("Date Field is Required"),
   description: yup.string().optional()
 })
@@ -134,8 +134,10 @@ const setVariablesToEdit = () => {
     state: modalData.value.state,
     date: modalData.value.date,
     ...(modalData.value.description && {description: modalData.value.description} ),
-    ...(modalData.value.installment && {description: modalData.value.installment} )
+    ...(modalData.value.installment && {installment: modalData.value.installment} )
   })
+
+  modalData.value.installment && (installmentState.value = true)
 }
 
 watch(valueMockUp, (newValue) => {
@@ -194,7 +196,7 @@ onMounted(() => {
             <div class="w-50">
               <div v-if="!installmentState">
                 <label>Installment: </label>
-                <select v-model="installmentState" class="w-100 form-select">
+                <select :disabled="modalInEditMode" v-model="installmentState" class="w-100 form-select">
                   <option :value="false">Discarted</option>
                   <option :value="true">Used</option>
                 </select>
@@ -204,8 +206,8 @@ onMounted(() => {
                 <div class="opacity-100 w-100">
                   <label>Installment: </label>
                   <div class="d-flex align-items-center">
-                    <input v-model="installment" class="form-control w-100" type="number">
-                    <i @click="cancelInstallmentState" class="ms-2 bi bi-x-circle"></i>
+                    <input :disabled="modalInEditMode" v-model="installment" class="form-control w-100" type="number">
+                    <i @click="!modalInEditMode && (cancelInstallmentState())" class="ms-2 bi bi-x-circle"></i>
                   </div>
                 </div>
               </div>
