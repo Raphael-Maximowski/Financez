@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Header from "@/Components/Header.vue";
 import {userSettingsModule} from "@/Store/UserSettingsModule.ts";
-import {computed, onBeforeMount, onBeforeUnmount , watch} from "vue";
+import {computed, onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
 import TransactionsModal from "@/Components/Modals/TransactionsModal.vue";
 import {modalManagementModule} from "@/Store/ModalManagementModule.ts";
 import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
@@ -15,18 +15,62 @@ const transactionsModule = transactionsDataModule()
 const modalManagement = modalManagementModule()
 const chartModule = chartsDataModule()
 const transactionsData = computed(() => transactionsModule.transactionsDataGetter)
+const transactionsTimeRange = computed(() => transactionsModule.transactionsTimeRangeGetter)
 const expensesData = computed(() => transactionsModule.expensesDataGetter)
 const incomesData = computed(() => transactionsModule.incomesDataGetter)
 const savingsData = computed(() => transactionsModule.savingsDataGetter)
-const goalsData = computed(() => transactionsModule.goalsDataGetter)
 const modalName = computed(() => modalManagement.modalNameGetter)
 const sortedIncomes = computed(() => incomesData.value.sort((a, b) => a.notFormatedDate - b.notFormatedDate))
 const sortedExpenses = computed(() => expensesData.value.sort((a, b) => a.notFormatedDate - b.notFormatedDate))
 const sortedTransactions = computed(() => [...incomesData.value, ...expensesData.value].sort((a, b) => a.notFormatedDate - b.notFormatedDate))
 const sortedSavings = computed(() => savingsData.value.sort((a, b) => a.notFormatedDate - b.notFormatedDate))
+const monthsArray = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+const labelMonthsForLineChart = ref([])
 
 const setUserWidth = (): void => {
   userSettingsManagement.setUserWidth(window.innerWidth)
+}
+
+const handleYearTimeRange = (transactions, colors) => {
+  let lastMonthRelatedToTransactions = []
+  const transactionsDataSets = []
+
+  Object.entries(transactions).forEach(([key, transactions]) => {
+    labelMonthsForLineChart.value = []
+
+    const lastTransactionRegistered = transactions[transactions.length -1 ].notFormatedDate
+    lastMonthRelatedToTransactions.push(lastTransactionRegistered.getMonth())
+  })
+  lastMonthRelatedToTransactions.length > 1 && (lastMonthRelatedToTransactions = Math.max(...lastMonthRelatedToTransactions))
+
+  for (let i = 0; i < lastMonthRelatedToTransactions; i++) {
+    labelMonthsForLineChart.value.push(monthsArray[i + 1])
+  }
+
+  Object.entries(transactions).forEach(([objectKey, transactions], index) => {
+    const monthsRelatedToTransaction = []
+    const totalValuesRelatedToMonths = []
+
+    for(let i = 0; i < lastMonthRelatedToTransactions; i ++) {
+      const firstDayOfMonth = new Date(2025, i + 1, 1)
+      const firstDayOfNextMonth = new Date(2025, i + 2, 1)
+
+      const totalValueRelatedToMonth = transactions.filter((t) => t.notFormatedDate >= firstDayOfMonth
+          && t.notFormatedDate < firstDayOfNextMonth
+      ).reduce((acc, transaction) => acc + parseInt(transaction.value), 0)
+
+      monthsRelatedToTransaction.push(monthsArray[i + 1])
+      totalValuesRelatedToMonths.push(totalValueRelatedToMonth)
+    }
+
+    transactionsDataSets.push({
+      label: objectKey,
+      data: totalValuesRelatedToMonths,
+      backgroundColor: colors[index]
+    })
+  })
+
+  return transactionsDataSets
 }
 
 const checkIfUserIsInDashBoardView = () => {
@@ -51,13 +95,13 @@ const setIncomesViewData = () => {
     return income ? income : 0
   })
 
-  const dataSetsIncomes = [
-    {
-      label: 'Incomes',
-      data: incomesDataFiltered,
-      backgroundColor: '#28A745'
-    },
-  ]
+  const dataSetsIncomes = transactionsTimeRange.value === 'year' ?
+      handleYearTimeRange({Incomes: sortedIncomes.value}, ['#28A745'])
+      : [{
+        label: 'Incomes',
+        data: incomesDataFiltered,
+        backgroundColor: '#28A745'
+      }]
 
   const doughnutIncomesDataSets = {
     labels: ['Paid Incomes', 'Pendent Incomes'],
@@ -69,10 +113,14 @@ const setIncomesViewData = () => {
     ]
   }
 
+  const lineChartLabels = transactionsTimeRange.value === 'year' ?
+      labelMonthsForLineChart.value
+      : uniqueDatesIncomes
+
   chartModule.setTableTitle('Incomes')
   chartModule.setDoughnutData(doughnutIncomesDataSets)
-  chartModule.setTransactionsTableData(incomesData.value)
-  chartModule.setLineChartConfig(dataSetsIncomes, uniqueDatesIncomes)
+  chartModule.setTransactionsTableData(incomesData.value.sort((a, b) => b.notFormatedDate - a.notFormatedDate))
+  chartModule.setLineChartConfig(dataSetsIncomes, lineChartLabels)
 }
 
 const setExpensesViewData = () => {
@@ -82,7 +130,7 @@ const setExpensesViewData = () => {
     expensesDoughnutData[1] += parseInt(e.value)
   })
 
-
+ 
   const uniqueDatesExpenses = [
     ...new Set(sortedExpenses.value.map((sortedExpense) => sortedExpense.date))
   ]
@@ -94,13 +142,14 @@ const setExpensesViewData = () => {
     return expenses ? expenses : 0
   })
 
-  const dataSetsExpenses = [
-    {
-      label: 'Expenses',
-      data: expensesDataFiltered,
-      backgroundColor: '#DC3545'
-    },
-  ]
+  const dataSetsExpenses = transactionsTimeRange.value === 'year' ?
+      handleYearTimeRange({Expenses: sortedExpenses.value}, ['#DC3545'])
+      : [{
+        label: 'Expenses',
+        data: expensesDataFiltered,
+        backgroundColor: '#DC3545'
+      },
+      ]
 
   const doughnutExpensesDataSet = {
     labels: ['Paid Expenses', 'Pendent Expenses'],
@@ -112,10 +161,14 @@ const setExpensesViewData = () => {
     ]
   }
 
+  const lineChartLabel = transactionsTimeRange.value === 'year' ?
+  labelMonthsForLineChart.value
+  : uniqueDatesExpenses
+
   chartModule.setTableTitle('Expenses')
   chartModule.setDoughnutData(doughnutExpensesDataSet)
-  chartModule.setTransactionsTableData(expensesData.value)
-  chartModule.setLineChartConfig(dataSetsExpenses, uniqueDatesExpenses)
+  chartModule.setTransactionsTableData(expensesData.value.sort((a, b) => b.notFormatedDate - a.notFormatedDate))
+  chartModule.setLineChartConfig(dataSetsExpenses, lineChartLabel)
 }
 
 const setTotalBalanceViewData = () => {
@@ -146,18 +199,30 @@ const setTotalBalanceViewData = () => {
     totalBalanceDoughnutData[3] += parseInt(i.value)
   })
 
-  const dataSetsTotalBalance = [
-    {
-      label: 'Expenses',
-      data: orderedExpenses,
-      backgroundColor: '#DC3545'
-    },
-    {
-      label: 'Incomes',
-      data: orderedIncomes,
-      backgroundColor: '#28A745'
-    },
-  ]
+
+  transactionsTimeRange.value === 'year' && handleYearTimeRange(
+      { Expenses: sortedExpenses.value,
+        incomes: sortedIncomes.value },['#DC3545', '#28A745'], ['Expenses', 'Incomes'])
+
+  const dataSetsTotalBalance = transactionsTimeRange.value === 'year' ?
+      handleYearTimeRange(
+          {
+            Expenses: sortedExpenses.value,
+            incomes: sortedIncomes.value
+          }, ['#DC3545', '#28A745'], ['Expenses', 'Incomes']
+      )
+      : [
+        {
+          label: 'Expenses',
+          data: orderedExpenses,
+          backgroundColor: '#DC3545'
+        },
+        {
+          label: 'Incomes',
+          data: orderedIncomes,
+          backgroundColor: '#28A745'
+        },
+      ]
 
   const doughnutTotalBalanceDataSet = {
     labels: ['Paid Expenses', 'Pendent Expenses', 'Paid Incomes', 'Pendent Incomes'],
@@ -169,10 +234,14 @@ const setTotalBalanceViewData = () => {
     ]
   }
 
+  const lineChatLabels = transactionsTimeRange.value === 'year' ?
+      labelMonthsForLineChart.value
+      : uniqueDates
+
   chartModule.setTableTitle('Total Balance')
   chartModule.setDoughnutData(doughnutTotalBalanceDataSet)
   chartModule.setTransactionsTableData(transactionsData.value)
-  chartModule.setLineChartConfig(dataSetsTotalBalance, uniqueDates)
+  chartModule.setLineChartConfig(dataSetsTotalBalance, lineChatLabels)
 }
 
 const calcGoalsPercentage = () => {
@@ -190,17 +259,23 @@ const setSavingsViewData = () => {
     return savingsInDate ? savingsInDate : 0
   })
 
-  const savingsDataSet = [
-    {
-      label: 'Savings',
-      data: savingsDataFiltered,
-      backgroundColor: '#424649'
-    }
-  ]
+  const savingsDataSet = transactionsTimeRange.value === 'year' ?
+      handleYearTimeRange({Savings: sortedSavings.value}, ['#424649'])
+      : [
+        {
+          label: 'Savings',
+          data: savingsDataFiltered,
+          backgroundColor: '#424649'
+        }
+      ]
+
+  const lineChartLabels = transactionsTimeRange.value === 'year' ?
+      labelMonthsForLineChart.value
+      : uniqueSavingsData
 
   chartModule.setTableTitle("Savings")
   chartModule.setTransactionsTableData(savingsData.value.sort((a, b) => b.notFormatedDate - a.notFormatedDate))
-  chartModule.setLineChartConfig(savingsDataSet, uniqueSavingsData)
+  chartModule.setLineChartConfig(savingsDataSet, lineChartLabels)
 
 }
 

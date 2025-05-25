@@ -2,6 +2,7 @@ export const handleTimeRange = (timeRange) => {
     const date = new Date()
     let startDate = null
     let endDate = null
+    let name = null
 
     switch (timeRange) {
         case 'week':
@@ -30,5 +31,5 @@ export const handleTimeRange = (timeRange) => {
             break;
     }
 
-    return ({startDate: startDate, endDate: endDate})
+    return ({startDate: startDate, endDate: endDate, name: timeRange})
 }

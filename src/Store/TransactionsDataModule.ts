@@ -14,11 +14,15 @@ export const transactionsDataModule = defineStore('transactionsDataModule', () =
         goals: goalsMockUp,
         timeRange: {
             startDate: '',
-            endDate: ''
+            endDate: '',
+            name: ''
         }
     })
 
     const goalsDataGetter = computed(() => transactionsData.value.goals.sort((a , b) => a.index - b.index))
+
+    const transactionsTimeRangeGetter = computed(() => transactionsData.value.timeRange.name)
+
     const savingsDataGetter = computed(() => transactionsData.value.savings
         .sort((a, b) => b.notFormatedDate - a.notFormatedDate)
         .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
@@ -185,6 +189,7 @@ export const transactionsDataModule = defineStore('transactionsDataModule', () =
         if (!timeRange) return
         transactionsData.value.timeRange.startDate = timeRange.startDate
         transactionsData.value.timeRange.endDate = timeRange.endDate
+        transactionsData.value.timeRange.name = timeRange.name
     }
 
     const updateTransaction = (transactionData) => {
@@ -243,6 +248,7 @@ export const transactionsDataModule = defineStore('transactionsDataModule', () =
     }
 
     return {
+        transactionsTimeRangeGetter,
         orderGoalsArray,
         calculateSpecificGoalPercentage,
         calculateGoalsPercentages,
