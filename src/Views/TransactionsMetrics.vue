@@ -5,7 +5,7 @@ import MetricsLine from "@/Components/Charts/MetricsLine.vue";
 import MetricDoughnut from "@/Components/Charts/MetricDoughnut.vue";
 import Draggable from "vuedraggable";
 import {computed, onMounted, ref, watch} from "vue";
-import {useRoute} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import GoalCard from "@/Components/Card/GoalCard.vue";
 import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
 import CreateGoal from "@/Components/Modals/CreateOrUpdateGoal.vue";
@@ -14,6 +14,7 @@ import InvestmentModal from "@/Components/Modals/InvestmentModal.vue";
 
 const transactionsManagement = transactionsDataModule()
 const modalManagement = modalManagementModule()
+const router = useRouter()
 const route = useRoute()
 const modalName = computed(() => modalManagement.modalNameGetter)
 const goalsDataComputed = computed(() => transactionsManagement.goalsDataGetter)
@@ -36,6 +37,10 @@ const setValueToReference = () => {
   goalsData.value = goalsDataComputed.value
 }
 
+const redirectToReportsView = () => {
+  router.push({ name: 'Reports View' })
+}
+
 watch(goalsDataComputed, () => {
   setValueToReference()
 }, { deep: true })
@@ -43,7 +48,11 @@ watch(goalsDataComputed, () => {
 
 <template>
   <div class="w-100 h-100 d-flex flex-column">
-    <TransactionsMetricsDropDown />
+
+    <div class="w-100 align-items-end justify-content-between d-flex flex-wrap">
+      <TransactionsMetricsDropDown />
+      <button @click="redirectToReportsView" class="btn btn-dark">Reports</button>
+    </div>
 
     <div class="content-container d-xxl-flex  flex-grow-1 pt-4">
       <div class="d-flex flex-column left-container-content col-xxl-9 col-12 h-100">
