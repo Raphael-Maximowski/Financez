@@ -33,3 +33,12 @@ export const handleTimeRange = (timeRange) => {
 
     return ({startDate: startDate, endDate: endDate, name: timeRange})
 }
+
+export const handleCustomMonthTimeRange = (monthIndex) => {
+    const year = new Date().getFullYear()
+    return {
+        startDate: new Date(year, monthIndex, 1),
+        endDate: new Date(year, monthIndex + 1, 0),
+        name: 'month'
+    }
+}

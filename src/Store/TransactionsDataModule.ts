@@ -190,6 +190,7 @@ export const transactionsDataModule = defineStore('transactionsDataModule', () =
         transactionsData.value.timeRange.startDate = timeRange.startDate
         transactionsData.value.timeRange.endDate = timeRange.endDate
         transactionsData.value.timeRange.name = timeRange.name
+
     }
 
     const updateTransaction = (transactionData) => {

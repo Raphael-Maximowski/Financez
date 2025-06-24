@@ -1,0 +1,237 @@
+<script setup lang="ts">
+
+import {computed, onMounted, ref, watch} from "vue";
+import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
+import {handleCustomMonthTimeRange, handleTimeRange} from "@/Utils/relatedToTimeFunctions.ts";
+import {Bar} from 'vue-chartjs'
+import {Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale} from 'chart.js'
+import {categoriesModule} from "@/Store/CategoriesModule.ts";
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+const transactionsModule = transactionsDataModule()
+const categoriesManagement = categoriesModule()
+const categoriesData = computed(() => categoriesManagement.categoriesDataGetter)
+const expensesData = computed(() => transactionsModule.expensesDataGetter)
+const incomesData = computed(() => transactionsModule.incomesDataGetter)
+const savingsData = computed(() => transactionsModule.savingsDataGetter)
+const reportTypeSelected = ref(0)
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+const reportsType = ["Total Balance", "Category", "Incomes", "Expenses", "Savings"]
+const actualDate = new Date()
+const timeRangeSelected = ref(actualDate.getMonth())
+const dataSet = ref()
+const options = {
+  responsive: true,
+  maintainAspectRatio: false
+}
+
+const setTimeRangeForMonth = () => {
+  transactionsModule.setTimeRange(handleTimeRange('month'))
+}
+
+const setCustomTimeRange = () => {
+  transactionsModule.setTimeRange(handleCustomMonthTimeRange(timeRangeSelected.value))
+}
+
+const calculateDataBasedInWeeks = (transactionsData) => {
+  const objectKeys = Object.keys(transactionsData)
+
+  const dataSets = objectKeys.map((key) => {
+    const dataParseInWeeks = {}
+    const transactions = transactionsData[key]
+    transactions.forEach((transaction) => {
+      const transactionsDate = new Date(transaction.notFormatedDate)
+      const transactionDay = transactionsDate.getDate()
+      const week = Math.ceil(transactionDay / 7)
+
+      if (!dataParseInWeeks[week]) {
+        dataParseInWeeks[week] = []
+      }
+
+      dataParseInWeeks[week].push(transaction)
+    })
+
+    const keysWeek = Object.keys(dataParseInWeeks)
+    const valuesWeek = keysWeek.map((key) => {
+      return dataParseInWeeks[key].reduce((acc, item) => acc + parseFloat(item?.value || 0), 0)
+    })
+
+    return {
+      label: keysWeek,
+      values: valuesWeek
+    }
+  })
+
+  if (objectKeys.length === 1) {
+    const {label, ...rest} = dataSets[0]
+    return {
+      ...rest,
+      chartLabel: label.map((weekLabel) => `Week ${weekLabel}`)
+    }
+  }
+
+  const incomesData = dataSets[0]
+  const expensesData = dataSets[1]
+  const chartLabel = [...new Set([...incomesData.label, ...expensesData.label])];
+  const values = {
+    expenses: chartLabel.map((week, index) => {
+      return expensesData.label.includes(week)
+          ? expensesData.values[index]
+          : 0
+
+    }),
+    incomes: chartLabel.map((week, index) => {
+      return incomesData.label.includes(week)
+          ? incomesData.values[index]
+          : 0
+    })
+  }
+
+  return {
+    chartLabel: chartLabel.map((week) => `Week ${week}`),
+    values: values
+  }
+}
+
+const calculateDataSet = () => {
+  switch (reportTypeSelected.value) {
+    case 0:
+      const totalBalanceCalc = calculateDataBasedInWeeks({incomes: incomesData.value, expenses: expensesData.value})
+      dataSet.value = {
+        labels: totalBalanceCalc.chartLabel,
+        datasets: [
+          {
+            label: 'Incomes',
+            data: totalBalanceCalc.values.incomes,
+            backgroundColor: '#28A745'
+          },
+          {
+            label: 'Expenses',
+            data: totalBalanceCalc.values.expenses,
+            backgroundColor: '#DC3545'
+          }
+        ]
+      }
+      break;
+    case 1:
+      const categoriesKeys = Object.keys(categoriesData.value)
+        const categoriesTitles = categoriesKeys.map((categoryKey) => categoriesData.value[categoryKey].name)
+        const categoryColors = categoriesKeys.map((categoryKey) => categoriesData.value[categoryKey].color)
+      const valuePerCategory = categoriesKeys.map((key) => {
+        return expensesData.value.filter((expense) => expense.categories && expense.categories.includes(key))
+            .reduce((acc, expenseInCategory) => acc + parseFloat(expenseInCategory.value), 0)
+      })
+
+      dataSet.value = {
+        labels: categoriesTitles,
+        datasets: [
+          {
+            label: 'Categorias',
+            data: valuePerCategory,
+            backgroundColor: categoryColors
+          }
+        ]
+      }
+
+      break;
+    case 2:
+      const incomesCalc = calculateDataBasedInWeeks({incomes: incomesData.value})
+      dataSet.value = {
+        labels: incomesCalc.chartLabel,
+        datasets: [
+          {
+            label: 'Incomes',
+            data: incomesCalc.values,
+            backgroundColor: '#28A745'
+          }
+        ]
+      }
+      break;
+    case 3:
+      const expensesCalc = calculateDataBasedInWeeks({expenses: expensesData.value})
+      dataSet.value = {
+        labels: expensesCalc.chartLabel,
+        datasets: [
+          {
+            label: 'Expenses',
+            data: expensesCalc.values,
+            backgroundColor: '#DC3545'
+          }
+        ]
+      }
+      break;
+    case 4:
+      const savingsCalc = calculateDataBasedInWeeks({savings: savingsData.value})
+      dataSet.value = {
+        labels: savingsCalc.chartLabel,
+        datasets: [
+          {
+            label: 'Savings',
+            data: savingsCalc.values,
+            backgroundColor: '#424649'
+          }
+        ]
+      }
+      break;
+  }
+}
+
+watch([savingsData, incomesData, expensesData], () => {
+  calculateDataSet()
+})
+
+watch(timeRangeSelected, () => {
+  setCustomTimeRange()
+})
+
+watch(reportTypeSelected, () => {
+  calculateDataSet()
+})
+
+onMounted(() => {
+  setTimeRangeForMonth()
+  calculateDataSet()
+})
+
+</script>
+
+<template>
+  <div class="w-100 h-100 d-flex flex-column gap-4">
+    <div class="d-flex gap-3">
+      <div class="d-flex flex-column gap-2">
+        <label>Reports Avaliable</label>
+        <select v-model="reportTypeSelected" class="w-auto form-select">
+          <option
+              v-for="(report, index) in reportsType"
+              :key="index"
+              :value="index"
+          >
+            {{ report }}
+          </option>
+        </select>
+      </div>
+      <div class="d-flex flex-column gap-2">
+        <label>Month</label>
+        <select v-model="timeRangeSelected " class="w-auto form-select">
+          <option
+              v-for="(month, index) in months"
+              :key="index"
+              :value="index"
+          >{{ month }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div v-if="dataSet" class="px-5 bart-chart-container w-100 flex-grow-1">
+      <Bar :options="options" :data="dataSet"/>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.bart-chart-container {
+  max-height: 70vh;
+}
+</style>
