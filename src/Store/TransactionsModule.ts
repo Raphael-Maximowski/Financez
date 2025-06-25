@@ -1,9 +1,9 @@
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
-import {expensesDataMockUp, goalsMockUp, incomesDataMockUp, savingsDataMockUp} from "@/Data/TransactionsMockUp.ts";
+import {expensesDataMockUp, goalsMockUp, incomesDataMockUp, savingsDataMockUp} from "@/Data/TransactionsData.ts";
 import {notificationModule} from "@/Store/NotificationModule.ts";
 
-export const transactionsDataModule = defineStore('transactionsDataModule', () => {
+export const transactionsModule = defineStore('transactionsModule', () => {
 
     const notificationManagement = notificationModule()
 

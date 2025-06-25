@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
 
-export const modalManagementModule = defineStore('modalManagementModule', () => {
+export const modalModule = defineStore('modalModule', () => {
 
     const modalManagementData = ref({
         modalState: false,

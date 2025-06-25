@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import Header from "@/Components/Header.vue";
+import Header from "@/Components/Headers/Header.vue";
 import {userSettingsModule} from "@/Store/UserSettingsModule.ts";
 import {computed, onBeforeMount, onBeforeUnmount, ref, watch} from "vue";
-import TransactionsModal from "@/Components/Modals/TransactionsModal.vue";
-import {modalManagementModule} from "@/Store/ModalManagementModule.ts";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
-import {chartsDataModule} from "@/Store/ChartsDataModule.ts";
+import TransactionsModal from "@/Components/Modals/TransactionManagementModal.vue";
+import {modalModule} from "@/Store/ModalModule.ts";
+import {transactionsModule as TransactionsModuleImported} from "@/Store/TransactionsModule.ts";
+import {chartsModule} from "@/Store/ChartsModule.ts";
 import {useRoute} from "vue-router";
-import {handleTimeRange} from "@/Utils/relatedToTimeFunctions.ts";
+import {handleTimeRange} from "@/Utils/formatters.ts";
 
 const route = useRoute()
 const userSettingsManagement: any = userSettingsModule()
-const transactionsModule = transactionsDataModule()
-const modalManagement = modalManagementModule()
-const chartModule = chartsDataModule()
+const transactionsModule = TransactionsModuleImported()
+const modalManagement = modalModule()
+const chartModule = chartsModule()
 const transactionsData = computed(() => transactionsModule.transactionsDataGetter)
 const transactionsTimeRange = computed(() => transactionsModule.transactionsTimeRangeGetter)
 const expensesData = computed(() => transactionsModule.expensesDataGetter)

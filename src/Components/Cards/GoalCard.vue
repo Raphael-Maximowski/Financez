@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import {computed, watch} from "vue";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
 
 const props = defineProps({
   goal: { type: Object, required: true }

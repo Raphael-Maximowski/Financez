@@ -2,10 +2,10 @@
 import { Chart as ChartJS, CategoryScale,  LinearScale,  PointElement,  LineElement,  Title,  Tooltip,  Legend } from 'chart.js'
 import { Line } from 'vue-chartjs'
 import {computed, onMounted} from "vue";
-import {chartsDataModule} from "@/Store/ChartsDataModule.ts";
+import {chartsModule} from "@/Store/ChartsModule.ts";
 ChartJS.register( CategoryScale,  LinearScale,  PointElement,  LineElement,  Title,  Tooltip,  Legend )
 
-const chartsManagement = chartsDataModule()
+const chartsManagement = chartsModule()
 const lineDataSets = computed(() => chartsManagement.lineDataSetsGetter)
 const lineLabels = computed(() => chartsManagement.lineLabelsGetter)
 

@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
 
-export const chartsDataModule = defineStore('chartsDataModule', () => {
+export const chartsModule = defineStore('chartsModule', () => {
 
     const chartData = ref({
         tableTransactionsData: [],

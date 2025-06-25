@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import {modalManagementModule} from "@/Store/ModalManagementModule.ts";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
+import {modalModule} from "@/Store/ModalModule.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
 import {computed, nextTick, onMounted, ref, watch} from "vue";
 import {useForm} from "vee-validate";
 import * as yup from 'yup';
@@ -27,8 +27,8 @@ const { defineField, setValues, validate } = useForm({
 })
 
 const notificationManagement = notificationModule()
-const modalManagement = modalManagementModule()
-const transactionsManagement = transactionsDataModule()
+const modalManagement = modalModule()
+const transactionsManagement = transactionsModule()
 const [ name ] = defineField('name')
 const [ value ] = defineField('value')
 const [ description ] = defineField('description')

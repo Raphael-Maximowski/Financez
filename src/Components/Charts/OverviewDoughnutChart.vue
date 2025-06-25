@@ -1,12 +1,12 @@
 <script setup>
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'
-import {chartsDataModule} from "@/Store/ChartsDataModule.ts";
+import {chartsModule} from "@/Store/ChartsModule.ts";
 import {computed, onMounted} from "vue";
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
-const chartsManagement = chartsDataModule()
+const chartsManagement = chartsModule()
 const doughnutDataSet = computed(() => chartsManagement.doughnutDataSetGetter)
 const data = computed(() => (doughnutDataSet.value))
 const options = {

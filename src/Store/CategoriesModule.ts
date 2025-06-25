@@ -1,5 +1,5 @@
 import {defineStore} from "pinia";
-import categoriesMockUp from "@/Data/CategoriesMockUp.ts";
+import categoriesMockUp from "@/Data/CategoriesData.ts";
 import {computed, ref} from "vue";
 import {notificationModule} from "@/Store/NotificationModule.ts";
 
