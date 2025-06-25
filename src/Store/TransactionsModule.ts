@@ -23,22 +23,38 @@ export const transactionsModule = defineStore('transactionsModule', () => {
 
     const transactionsTimeRangeGetter = computed(() => transactionsData.value.timeRange.name)
 
-    const savingsDataGetter = computed(() => transactionsData.value.savings
+    const notOrderedSavingsData = computed(() => transactionsData.value.savings
+        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
+            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        ))
+    const savingsDataGetter = computed(() => [...transactionsData.value.savings]
         .sort((a, b) => b.notFormatedDate - a.notFormatedDate)
         .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
             && t.notFormatedDate <= transactionsData.value.timeRange.endDate
         ))
 
-    const expensesDataGetter = computed(() => transactionsData.value.expenses
+    const notOrderedExpensesData = computed(() => transactionsData.value.expenses
+        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
+            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        ))
+
+    const expensesDataGetter = computed(() => [...transactionsData.value.expenses]
         .sort((a ,b) => b.notFormatedDate - a.notFormatedDate)
         .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
             && t.notFormatedDate <= transactionsData.value.timeRange.endDate
         ))
-    const incomesDataGetter = computed(() => transactionsData.value.incomes
+
+    const notOrderedIncomesData = computed(() => transactionsData.value.incomes
+        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
+            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        ))
+    const incomesDataGetter = computed(() => [...transactionsData.value.incomes]
         .sort((a, b) => b.notFormatedDate - a.notFormatedDate)
         .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
             && t.notFormatedDate <= transactionsData.value.timeRange.endDate
         ))
+
+
     const transactionsDataGetter = computed(() => [...expensesDataGetter.value, ...incomesDataGetter.value]
         .sort((a, b) => b.notFormatedDate - a.notFormatedDate)
         .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
@@ -312,7 +328,10 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         expensesDataGetter,
         incomesDataGetter,
         transactionsDataGetter,
-        setTimeRange
+        setTimeRange,
+        notOrderedSavingsData,
+        notOrderedExpensesData,
+        notOrderedIncomesData
     }
 
 })

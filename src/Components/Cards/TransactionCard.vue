@@ -29,13 +29,13 @@ const changeTransactionState = () => {
 </script>
 
 <template>
-  <div class="align-items-center transaction-card justify-content-between  w-100 bg-white py-3 d-flex">
-    <div class="align-items-center d-flex">
-      <div>
+  <div class="gap-3 align-items-center transaction-card justify-content-between  w-100 bg-white py-3 d-flex">
+    <div class="gap-3 align-items-center flex-grow-1 d-flex">
+      <div class="transaction-data">
         <p class="mb-0">{{ transaction.name }}</p>
         <p class="mb-0 small-letters text-secondary">{{ transaction.date }}</p>
       </div>
-      <p class="m-0 ms-3">
+      <p class="m-0">
         <i v-if="props.transaction.state === 'Pendent'" @click.stop="changeTransactionState" class="bi bi-check2-circle fs-6"></i>
       </p>
     </div>
@@ -44,6 +44,10 @@ const changeTransactionState = () => {
 </template>
 
 <style scoped>
+.transaction-data {
+  min-width: 100px;
+}
+
 .bi-check2-all {
   cursor: pointer;
 }

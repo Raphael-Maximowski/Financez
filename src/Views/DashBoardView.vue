@@ -6,6 +6,7 @@ import {dashBoardModule} from "@/Store/DashBoardModule.ts";
 import DashBoardDoughnut from "@/Components/Charts/DashboardDoughnutChart.vue";
 import {chartsModule} from "@/Store/ChartsModule.ts";
 import {transactionsModule} from "@/Store/TransactionsModule.ts";
+import {handleTimeRange} from "@/Utils/formatters.ts";
 
 const chartsManagement = chartsModule()
 const transactionsManagement = transactionsModule()
@@ -17,7 +18,12 @@ const checkDashBoardData = () => {
   dashBoardManagement.setDashBoardData()
 }
 
+const setMonthTimeRange = () => {
+  transactionsManagement.setTimeRange(handleTimeRange('month'))
+}
+
 onMounted(() => {
+  setMonthTimeRange()
   checkDashBoardData()
 })
 
