@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import TransactionCard from "@/Components/Card/TransactionCard.vue";
-import {modalManagementModule} from "@/Store/ModalManagementModule.ts";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
+import TransactionCard from "@/Components/Cards/TransactionCard.vue";
+import {modalModule} from "@/Store/ModalModule.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
 import {computed, watch} from "vue";
-import {chartsDataModule} from "@/Store/ChartsDataModule.ts";
+import {chartsModule} from "@/Store/ChartsModule.ts";
 import {useRoute} from "vue-router";
-import InvestmentModal from "@/Components/Modals/InvestmentModal.vue";
+import InvestmentModal from "@/Components/Modals/InvestmentManagementModal.vue";
 
-const modalManagement = modalManagementModule()
+const modalManagement = modalModule()
 const route = useRoute()
-const chartManagement = chartsDataModule()
+const chartManagement = chartsModule()
 const transactionsData = computed(() => chartManagement.tableTransactionsGetter)
 const tableTitle = computed(() => chartManagement.tableTitleGetter)
 

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
 
-const transactionsManagement = transactionsDataModule()
+const transactionsManagement = transactionsModule()
 
 const props = defineProps({
   transaction: { type: Object, required: true }

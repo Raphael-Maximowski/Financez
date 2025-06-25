@@ -2,7 +2,7 @@
 import {computed, onMounted, ref, watch} from "vue";
 import { unformat } from "v-money3";
 import {notificationModule} from "@/Store/NotificationModule.ts";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
 
 const props = defineProps({
   goalData: { type: Object, required: true },
@@ -11,7 +11,7 @@ const props = defineProps({
 })
 
 const investmentsAssociatedToGoal = computed(() => props?.goalData?.transactionsAssociated || [])
-const transactionsManagement = transactionsDataModule()
+const transactionsManagement = transactionsModule()
 const notificationManagement = notificationModule()
 const investmentValue = ref()
 const investmentMock = ref()

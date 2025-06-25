@@ -1,10 +1,10 @@
 import {defineStore} from "pinia";
 import {computed, ref} from "vue";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
 
 export const dashBoardModule = defineStore('dashBoardModule', () => {
 
-    const transactionsManagement = transactionsDataModule()
+    const transactionsManagement = transactionsModule()
     const incomesData = computed(() => transactionsManagement.incomesDataGetter)
     const expensesData = computed(() => transactionsManagement.expensesDataGetter)
     const savingsData = computed(() => transactionsManagement.savingsDataGetter)

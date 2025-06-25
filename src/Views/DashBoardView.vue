@@ -1,14 +1,14 @@
 <script setup>
-import DashBoardCard from "@/Cards/DashBoardCard.vue";
+import DashBoardCard from "@/Components/Cards/DashBoardCard.vue";
 import TransactionsTables from "@/Components/Tables/TransactionsTables.vue";
 import {computed, onMounted, watch} from "vue";
 import {dashBoardModule} from "@/Store/DashBoardModule.ts";
-import DashBoardDoughnut from "@/Components/Charts/DashBoardDoughnut.vue";
-import {chartsDataModule} from "@/Store/ChartsDataModule.ts";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
+import DashBoardDoughnut from "@/Components/Charts/DashboardDoughnutChart.vue";
+import {chartsModule} from "@/Store/ChartsModule.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
 
-const chartsManagement = chartsDataModule()
-const transactionsManagement = transactionsDataModule()
+const chartsManagement = chartsModule()
+const transactionsManagement = transactionsModule()
 const transactionsData = computed(() => transactionsManagement.transactionsDataGetter)
 const dashBoardManagement = dashBoardModule()
 const chartsTransactions = computed(() => chartsManagement.chartTransactionsGetter)

@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import {modalManagementModule} from "@/Store/ModalManagementModule.ts";
+import {modalModule} from "@/Store/ModalModule.ts";
 import {computed, onMounted, ref, watch} from "vue";
 import {useForm} from "vee-validate";
 import * as yup from 'yup';
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
 import {notificationModule} from "@/Store/NotificationModule.ts";
 import {unformat, format} from "v-money3";
 import {categoriesModule} from "@/Store/CategoriesModule.ts";
 
-const modalManagement = modalManagementModule()
-const transactionsManagement = transactionsDataModule()
+const modalManagement = modalModule()
+const transactionsManagement = transactionsModule()
 const notificationManagement = notificationModule()
 const categoriesManagement = categoriesModule()
 const categoriesData = computed(() => categoriesManagement.categoriesDataGetter)

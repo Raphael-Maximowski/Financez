@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import TransactionsMetricsDropDown from "@/Components/DropDowns/TransactionsMetricsDropDown.vue";
+import TransactionsMetricsDropDown from "@/Components/DropDowns/OverviewSettingsDropdown.vue";
 import TransactionsTables from "@/Components/Tables/TransactionsTables.vue";
-import MetricsLine from "@/Components/Charts/MetricsLine.vue";
-import MetricDoughnut from "@/Components/Charts/MetricDoughnut.vue";
+import MetricsLine from "@/Components/Charts/OverviewLineChart.vue";
+import MetricDoughnut from "@/Components/Charts/OverviewDoughnutChart.vue";
 import Draggable from "vuedraggable";
 import {computed, onMounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import GoalCard from "@/Components/Card/GoalCard.vue";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
-import CreateGoal from "@/Components/Modals/CreateOrUpdateGoal.vue";
-import {modalManagementModule} from "@/Store/ModalManagementModule.ts";
-import InvestmentModal from "@/Components/Modals/InvestmentModal.vue";
+import GoalCard from "@/Components/Cards/GoalCard.vue";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
+import CreateGoal from "@/Components/Modals/GoalManagementModal.vue";
+import {modalModule} from "@/Store/ModalModule.ts";
+import InvestmentModal from "@/Components/Modals/InvestmentManagementModal.vue";
 
-const transactionsManagement = transactionsDataModule()
-const modalManagement = modalManagementModule()
+const transactionsManagement = transactionsModule()
+const modalManagement = modalModule()
 const router = useRouter()
 const route = useRoute()
 const modalName = computed(() => modalManagement.modalNameGetter)

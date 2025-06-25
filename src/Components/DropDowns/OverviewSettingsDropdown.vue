@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import {onMounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
-import {handleTimeRange} from "@/Utils/relatedToTimeFunctions.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
+import {handleTimeRange} from "@/Utils/formatters.ts";
 
 const route = useRoute()
 const router = useRouter()
 const typeMetrics = ref()
-const transactionsManagement = transactionsDataModule()
+const transactionsManagement = transactionsModule()
 const timeRange = ref('week')
 
 const setActualRoute = () => {

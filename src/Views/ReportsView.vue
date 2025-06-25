@@ -1,15 +1,15 @@
 <script setup lang="ts">
 
 import {computed, onMounted, ref, watch} from "vue";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
-import {handleCustomMonthTimeRange, handleTimeRange} from "@/Utils/relatedToTimeFunctions.ts";
+import {transactionsModule as transactionsModuleImported} from "@/Store/TransactionsModule.ts";
+import {handleCustomMonthTimeRange, handleTimeRange} from "@/Utils/formatters.ts";
 import {Bar} from 'vue-chartjs'
 import {Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale} from 'chart.js'
 import {categoriesModule} from "@/Store/CategoriesModule.ts";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-const transactionsModule = transactionsDataModule()
+const transactionsModule = transactionsModuleImported()
 const categoriesManagement = categoriesModule()
 const categoriesData = computed(() => categoriesManagement.categoriesDataGetter)
 const expensesData = computed(() => transactionsModule.expensesDataGetter)

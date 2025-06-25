@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import GoalInvestmentCard from "@/Components/Card/GoalInvestmentCard.vue";
-import {modalManagementModule} from "@/Store/ModalManagementModule.ts";
-import {transactionsDataModule} from "@/Store/TransactionsDataModule.ts";
+import GoalInvestmentCard from "@/Components/Cards/GoalInvestmentCard.vue";
+import {modalModule} from "@/Store/ModalModule.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
 import {computed, onMounted} from "vue";
 
-const modalManagement = modalManagementModule()
-const transactionsManagement = transactionsDataModule()
+const modalManagement = modalModule()
+const transactionsManagement = transactionsModule()
 const modalData = computed(() => modalManagement.modalDataGetter)
 const modalInEditMode = computed(() => (!!modalData.value))
 const goalsData = computed(() => transactionsManagement.goalsDataGetter)
