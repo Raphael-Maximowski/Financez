@@ -22,6 +22,7 @@ const modalName = computed(() => modalManagement.modalNameGetter)
 const goalsDataComputed = computed(() => transactionsManagement.goalsDataGetter)
 const goalsData = ref(goalsDataComputed.value.sort((a, b) => a.index - b.index));
 const inSavingsView = computed(() => route.name === 'Savings View')
+const shouldCalculateDashboardData = computed(() => transactionsManagement.shouldCalculateDashboardDataGetters)
 
 const transactionsData = computed(() => transactionsManagement.transactionsDataGetter)
 const expensesData = computed(() => transactionsManagement.expensesDataGetter)
@@ -30,7 +31,7 @@ const savingsData = computed(() => transactionsManagement.savingsDataGetter)
 const sortedSavings = computed(() => transactionsManagement.notOrderedSavingsData)
 const incomesData = computed(() => transactionsManagement.incomesDataGetter)
 const sortedIncomes = computed(() => transactionsManagement.notOrderedIncomesData)
-const sortedTransactions = computed(() => [...sortedIncomes.value, ...sortedExpenses.value])
+const sortedTransactions = computed(() => [...sortedIncomes.value, ...sortedExpenses.value].sort((a, b) => a.notFormatedDate - b.notFormatedDate))
 
 const transactionsTimeRange = computed(() => transactionsManagement.transactionsTimeRangeGetter)
 const monthsArray = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
@@ -133,7 +134,7 @@ const setIncomesViewData = () => {
 
   chartModule.setTableTitle('Incomes')
   chartModule.setDoughnutData(doughnutIncomesDataSets)
-  chartModule.setTransactionsTableData(incomesData)
+  chartModule.setTransactionsTableData(incomesData.value)
   chartModule.setLineChartConfig(dataSetsIncomes, lineChartLabels)
 }
 
@@ -200,7 +201,7 @@ const setExpensesViewData = () => {
 
   chartModule.setTableTitle('Expenses')
   chartModule.setDoughnutData(doughnutExpensesDataSet)
-  chartModule.setTransactionsTableData(expensesData)
+  chartModule.setTransactionsTableData(expensesData.value)
   chartModule.setLineChartConfig(dataSetsExpenses, lineChartLabel)
 }
 
@@ -274,7 +275,7 @@ const setTotalBalanceViewData = () => {
 
   chartModule.setTableTitle('Total Balance')
   chartModule.setDoughnutData(doughnutTotalBalanceDataSet)
-  chartModule.setTransactionsTableData(transactionsData)
+  chartModule.setTransactionsTableData(transactionsData.value)
   chartModule.setLineChartConfig(dataSetsTotalBalance, lineChatLabels)
 }
 
@@ -308,9 +309,24 @@ const setSavingsViewData = () => {
       : uniqueSavingsData
 
   chartModule.setTableTitle("Savings")
-  chartModule.setTransactionsTableData(savingsData)
+  chartModule.setTransactionsTableData(savingsData.value)
   chartModule.setLineChartConfig(savingsDataSet, lineChartLabels)
 }
+
+const checkShouldCalculateData = () => {
+  if (shouldCalculateDashboardData.value) {
+    setDataBasedInRoute()
+    resetShouldCalculateDashboardData()
+  }
+}
+
+const resetShouldCalculateDashboardData = () => {
+  transactionsManagement.setShouldCalculateDashboardData(false)
+}
+
+watch(shouldCalculateDashboardData, (newValue) => {
+  checkShouldCalculateData()
+}, { deep: true })
 
 watch([route, transactionsTimeRange], () => {
   setDataBasedInRoute()

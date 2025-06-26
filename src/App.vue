@@ -10,7 +10,7 @@ const modalManagement = modalModule()
 const modalName = computed(() => modalManagement.modalNameGetter)
 
 const setUserWidth = (): void => {
-  userSettingsManagement.setUserWidth(window.innerWidth)
+  userSettingsManagement.setUserWidth(window.innerWidth) 
 }
 
 onBeforeMount(() => {

@@ -37,7 +37,7 @@ export const chartsModule = defineStore('chartsModule', () => {
 
     const setTransactionsTableData = (transactionsData) => {
         if (!transactionsData) return
-        chartData.value.tableTransactionsData = transactionsData
+        chartData.value.tableTransactionsData = [...transactionsData]
     }
 
     return {

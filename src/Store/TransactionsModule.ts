@@ -16,14 +16,18 @@ export const transactionsModule = defineStore('transactionsModule', () => {
             startDate: '',
             endDate: '',
             name: ''
-        }
+        },
+        shouldCalculateDashboardData: false
     })
+
+    const shouldCalculateDashboardDataGetters = computed(() => transactionsData.value.shouldCalculateDashboardData)
 
     const goalsDataGetter = computed(() => transactionsData.value.goals.sort((a , b) => a.index - b.index))
 
     const transactionsTimeRangeGetter = computed(() => transactionsData.value.timeRange.name)
 
     const notOrderedSavingsData = computed(() => transactionsData.value.savings
+        .sort((a, b) => a.notFormatedDate - b.notFormatedDate)
         .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
             && t.notFormatedDate <= transactionsData.value.timeRange.endDate
         ))
@@ -34,6 +38,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         ))
 
     const notOrderedExpensesData = computed(() => transactionsData.value.expenses
+        .sort((a, b) => a.notFormatedDate - b.notFormatedDate)
         .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
             && t.notFormatedDate <= transactionsData.value.timeRange.endDate
         ))
@@ -45,6 +50,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         ))
 
     const notOrderedIncomesData = computed(() => transactionsData.value.incomes
+        .sort((a, b) => a.notFormatedDate - b.notFormatedDate)
         .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
             && t.notFormatedDate <= transactionsData.value.timeRange.endDate
         ))
@@ -60,6 +66,10 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
             && t.notFormatedDate <= transactionsData.value.timeRange.endDate
         ))
+
+    const setShouldCalculateDashboardData = (state) => {
+        transactionsData.value.shouldCalculateDashboardData = state
+    }
 
     const orderGoalsArray = (event) => {
         const goalMovedIndex = transactionsData.value.goals.findIndex((g) => g.id === event.element.id)
@@ -116,6 +126,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const deleteInvestment = (investmentData) => {
+        setShouldCalculateDashboardData(true)
         const investmentIndexInSaving = transactionsData.value.savings
             .findIndex((s) => s.id === investmentData.investmentId)
         const goalAssociatedToIndex = transactionsData.value.goals
@@ -133,6 +144,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const deleteGoal = (goalData) => {
+        setShouldCalculateDashboardData(true)
         const goalIndex = transactionsData.value.goals.findIndex((g) => g.id === goalData.id)
         if (goalIndex !== -1) {
             transactionsData.value.goals.splice(goalIndex, 1)
@@ -146,6 +158,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const createInvestmentTransaction = (investmentData) => {
+        setShouldCalculateDashboardData(true)
         if (!investmentData) return
         const investmentIndex = transactionsData.value.goals.findIndex((g) => g.id === investmentData.goalId)
         if (investmentData === -1) return
@@ -159,6 +172,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const updateGoal = (data) => {
+        setShouldCalculateDashboardData(true)
         const goalIndex = transactionsData.value.goals.findIndex((g) => g.id === data.id)
         transactionsData.value.goals[goalIndex] = data
         calculateSpecificGoalPercentage(data.id)
@@ -166,6 +180,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const createGoal = (data) => {
+        setShouldCalculateDashboardData(true)
         if (!data) return
         const goalId = transactionsData.value.goals.length === 0 ? 1
             : transactionsData.value.goals[transactionsData.value.goals.length - 1].id + 1
@@ -186,6 +201,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const setTransactionsAsPaid = (transactionId, transactionType) => {
+        setShouldCalculateDashboardData(true)
         if (!transactionId || !transactionType) return
         switch (transactionType && transactionType) {
             case 'Expense' :
@@ -210,6 +226,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const updateTransaction = (transactionData) => {
+        setShouldCalculateDashboardData(true)
         switch (transactionData.type) {
             case 'Income':
                 const incomeIndex = transactionsData.value.incomes.findIndex((t) => t.id === transactionData.id)
@@ -225,6 +242,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const deleteTransaction = (transactionData) => {
+        setShouldCalculateDashboardData(true)
         switch (transactionData.type) {
             case 'Income':
                 const incomeIndex = transactionsData.value.incomes.findIndex((t) => t.id === transactionData.id)
@@ -242,6 +260,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const handleTransactionInstallment = (transaction) => {
+        setShouldCalculateDashboardData(true)
         const originalTransaction = transaction
         const originalTransactionDate = originalTransaction.notFormatedDate
         const transactionAlreadyRegistered = 1
@@ -273,6 +292,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const setTransactionData = (transactionData) => {
+        setShouldCalculateDashboardData(true)
         switch (transactionData.type) {
             case 'Income':
                 const incomeId = transactionsData.value.incomes.length === 0 ? 1 : transactionsData.value.incomes[transactionsData.value.incomes.length - 1].id + 1
@@ -310,6 +330,8 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     return {
+        shouldCalculateDashboardDataGetters,
+        setShouldCalculateDashboardData,
         transactionsTimeRangeGetter,
         orderGoalsArray,
         calculateSpecificGoalPercentage,
