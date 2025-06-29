@@ -340,7 +340,7 @@ watch(goalsDataComputed, () => {
 <template>
   <div class="w-100 h-100 d-flex flex-column">
 
-    <div class="w-100 align-items-end justify-content-between d-flex flex-wrap">
+    <div class="w-100 align-items-end gap-2 justify-content-between d-flex flex-wrap">
       <TransactionsMetricsDropDown/>
       <button @click="redirectToReportsView" class="btn btn-dark">Reports</button>
     </div>

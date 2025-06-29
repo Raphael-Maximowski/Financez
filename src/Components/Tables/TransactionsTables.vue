@@ -50,17 +50,26 @@ const openTransactionModal = (transactionData = null):void => {
           : 'Create Transaction' }}</button>
     </div>
     <div class="px-4 flex-grow-1 custom-side-bar overflow-y-auto">
-      <TransactionCard
-          v-for="(transaction, index) in transactionsData"
-          :key="index"
-          :transaction="transaction"
-          @click="openModal(transaction)"
-      />
+      <div v-if="Array.isArray(transactionsData) && transactionsData.length > 0">
+        <TransactionCard
+            v-for="(transaction, index) in transactionsData"
+            :key="index"
+            :transaction="transaction"
+            @click="openModal(transaction)"
+        />
+      </div>
+      <div v-else class="d-flex empty-content gap-3 justify-content-center align-items-center w-100 h-100 ">
+        <i class="bi bi-ban"></i> <p class="mb-0">No transactions found in this period</p>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+.empty-content {
+  color: gray;
+}
+
 .table-header {
   border-bottom: 1px solid lightgray;
 }
