@@ -6,6 +6,7 @@ import {handleCustomMonthTimeRange, handleTimeRange} from "@/Utils/formatters.ts
 import {Bar} from 'vue-chartjs'
 import {Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale} from 'chart.js'
 import {categoriesModule} from "@/Store/CategoriesModule.ts";
+import ReportBarChart from "@/Components/Charts/ReportBarChart.vue";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
@@ -224,9 +225,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <div v-if="dataSet" class="px-5 bart-chart-container w-100 flex-grow-1">
-      <Bar :options="options" :data="dataSet"/>
-    </div>
+    <ReportBarChart :dataSet="dataSet" />
   </div>
 </template>
 

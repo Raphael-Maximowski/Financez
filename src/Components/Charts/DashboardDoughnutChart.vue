@@ -2,11 +2,16 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'
 import {dashBoardModule} from "@/Store/DashBoardModule.ts";
-import {computed} from "vue";
+import {computed, onMounted} from "vue";
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 const dashBoardManagement = dashBoardModule()
 const dashBoardData = computed(() => dashBoardManagement.dashboardDataGetter)
+const chartReadyToRender = computed(() => {
+  const incomeValue = Array.isArray(dashBoardData.value) && dashBoardData.value[1] && dashBoardData.value[1].value
+  const expenseValue = Array.isArray(dashBoardData.value) && dashBoardData.value[2] && dashBoardData.value[2].value
+  return incomeValue && expenseValue
+})
 
 const data = computed(() => ({
   labels: ['Income', 'Expense'],
@@ -28,7 +33,7 @@ const options = {
 
 <template>
   <div class="w-75 h-75">
-    <Doughnut class="w-100 h-100" :data="data" :options="options" />
+    <Doughnut v-if="chartReadyToRender" class="w-100 h-100" :data="data" :options="options" />
   </div>
 </template>
 
