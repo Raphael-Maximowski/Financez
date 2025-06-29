@@ -15,6 +15,7 @@ export const userSettingsModule = defineStore('userSettingsModule', () => {
 
     return {
         userWidthGetter,
-        setUserWidth
+        setUserWidth,
+        userSettingsData
     }
-})
+}, { persist: true })

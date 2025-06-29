@@ -128,7 +128,7 @@ const calculateDataSet = () => {
         labels: categoriesTitles,
         datasets: [
           {
-            label: 'Categorias',
+            label: 'Categories',
             data: valuePerCategory,
             backgroundColor: categoryColors
           }
