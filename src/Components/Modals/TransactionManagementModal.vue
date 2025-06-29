@@ -259,7 +259,7 @@ onMounted(() => {
           <div class="input-section d-flex w-100 gap-between-inputs">
             <div class="w-50">
               <label>Type: </label>
-              <select v-model="type" class="w-100 form-select">
+              <select :disabled="modalInEditMode" v-model="type" class="w-100 form-select">
                 <option value="Income">Income</option>
                 <option value="Expense">Expense</option>
               </select>
