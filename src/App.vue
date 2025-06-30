@@ -3,6 +3,7 @@ import Header from "@/Components/Headers/Header.vue";
 import {userSettingsModule} from "@/Store/UserSettingsModule.ts";
 import {computed, nextTick, onBeforeMount, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import TransactionsModal from "@/Components/Modals/TransactionManagementModal.vue";
+import ResetDataModal from "@/Components/Modals/ResetDataModal.vue";
 import {modalModule} from "@/Store/ModalModule.ts";
 import {transactionsModule} from "@/Store/TransactionsModule.ts";
 
@@ -34,6 +35,7 @@ onBeforeUnmount((): void => {
   </div>
 
   <TransactionsModal v-if="modalName === 'TransactionsModal'"/>
+  <ResetDataModal v-if="modalName === 'ResetDataModal'"/>
 </template>
 
 <style scoped>
