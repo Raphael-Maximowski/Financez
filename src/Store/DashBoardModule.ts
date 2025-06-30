@@ -8,6 +8,7 @@ export const dashBoardModule = defineStore('dashBoardModule', () => {
     const incomesData = computed(() => transactionsManagement.incomesDataGetter)
     const expensesData = computed(() => transactionsManagement.expensesDataGetter)
     const savingsData = computed(() => transactionsManagement.savingsDataGetter)
+    const defaultExpenses = computed(() => transactionsManagement.defaultExpenses)
 
     const dashboardData = ref([
         {name: 'Total Balance', value: 0, routerParams: 'total-balance',icon: 'bi-currency-dollar', text: 'Final balance of the month.'},
@@ -42,7 +43,8 @@ export const dashBoardModule = defineStore('dashBoardModule', () => {
     }
 
     return {
-        setDashBoardData,
-        dashboardDataGetter
+        dashboardData,
+        dashboardDataGetter,
+        setDashBoardData
     }
-})
+}, { persist: true })

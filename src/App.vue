@@ -4,10 +4,12 @@ import {userSettingsModule} from "@/Store/UserSettingsModule.ts";
 import {computed, nextTick, onBeforeMount, onBeforeUnmount, onMounted, ref, watch} from "vue";
 import TransactionsModal from "@/Components/Modals/TransactionManagementModal.vue";
 import {modalModule} from "@/Store/ModalModule.ts";
+import {transactionsModule} from "@/Store/TransactionsModule.ts";
 
 const userSettingsManagement: any = userSettingsModule()
 const modalManagement = modalModule()
 const modalName = computed(() => modalManagement.modalNameGetter)
+const transactionsMagement = transactionsModule()
 
 const setUserWidth = (): void => {
   userSettingsManagement.setUserWidth(window.innerWidth) 

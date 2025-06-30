@@ -22,7 +22,9 @@ export const categoriesModule = defineStore('categoriesModule', () => {
     }
 
     return {
+        categoriesData,
+        categoriesKeys,
         categoriesDataGetter,
         createCategory
     }
-})
+}, { persist: true })

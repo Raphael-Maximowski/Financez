@@ -41,14 +41,15 @@ export const chartsModule = defineStore('chartsModule', () => {
     }
 
     return {
+        chartData,
         doughnutDataSetGetter,
         lineDataSetsGetter,
         lineLabelsGetter,
         tableTransactionsGetter,
+        tableTitleGetter,
         setTransactionsTableData,
         setDoughnutData,
         setLineChartConfig,
         setTableTitle,
-        tableTitleGetter
     }
-})
+}, { persist: true })

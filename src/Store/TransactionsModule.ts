@@ -20,6 +20,8 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         shouldCalculateDashboardData: false
     })
 
+    const defaultExpenses = computed(() => transactionsData.value.expenses)
+
     const shouldCalculateDashboardDataGetters = computed(() => transactionsData.value.shouldCalculateDashboardData)
 
     const goalsDataGetter = computed(() => transactionsData.value.goals.sort((a , b) => a.index - b.index))
@@ -27,44 +29,45 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     const transactionsTimeRangeGetter = computed(() => transactionsData.value.timeRange.name)
 
     const notOrderedSavingsData = computed(() => transactionsData.value.savings
-        .sort((a, b) => a.notFormatedDate - b.notFormatedDate)
-        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
-            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(a.notFormatedDate) - new Date(b.notFormatedDate))
+        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
+            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
         ))
+
     const savingsDataGetter = computed(() => [...transactionsData.value.savings]
-        .sort((a, b) => b.notFormatedDate - a.notFormatedDate)
-        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
-            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(b.notFormatedDate) - new Date(a.notFormatedDate))
+        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
+            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
         ))
 
     const notOrderedExpensesData = computed(() => transactionsData.value.expenses
-        .sort((a, b) => a.notFormatedDate - b.notFormatedDate)
-        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
-            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(a.notFormatedDate) - new Date(b.notFormatedDate))
+        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
+            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
         ))
 
     const expensesDataGetter = computed(() => [...transactionsData.value.expenses]
-        .sort((a ,b) => b.notFormatedDate - a.notFormatedDate)
-        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
-            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        .sort((a ,b) => new Date(b.notFormatedDate) - new Date(a.notFormatedDate))
+        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
+            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
         ))
 
     const notOrderedIncomesData = computed(() => transactionsData.value.incomes
-        .sort((a, b) => a.notFormatedDate - b.notFormatedDate)
-        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
-            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(a.notFormatedDate) - new Date(b.notFormatedDate))
+        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
+            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
         ))
     const incomesDataGetter = computed(() => [...transactionsData.value.incomes]
-        .sort((a, b) => b.notFormatedDate - a.notFormatedDate)
-        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
-            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(b.notFormatedDate) - new Date(a.notFormatedDate))
+        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
+            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
         ))
 
 
     const transactionsDataGetter = computed(() => [...expensesDataGetter.value, ...incomesDataGetter.value]
-        .sort((a, b) => b.notFormatedDate - a.notFormatedDate)
-        .filter((t) => t.notFormatedDate >= transactionsData.value.timeRange.startDate
-            && t.notFormatedDate <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(b.notFormatedDate) - new Date(a.notFormatedDate))
+        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
+            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
         ))
 
     const setShouldCalculateDashboardData = (state) => {
@@ -222,7 +225,6 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         transactionsData.value.timeRange.startDate = timeRange.startDate
         transactionsData.value.timeRange.endDate = timeRange.endDate
         transactionsData.value.timeRange.name = timeRange.name
-
     }
 
     const updateTransaction = (transactionData) => {
@@ -330,9 +332,19 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     return {
+        defaultExpenses,
+        transactionsData,
         shouldCalculateDashboardDataGetters,
-        setShouldCalculateDashboardData,
+        notOrderedSavingsData,
+        notOrderedExpensesData,
+        notOrderedIncomesData,
         transactionsTimeRangeGetter,
+        goalsDataGetter,
+        savingsDataGetter,
+        expensesDataGetter,
+        incomesDataGetter,
+        transactionsDataGetter,
+        setShouldCalculateDashboardData,
         orderGoalsArray,
         calculateSpecificGoalPercentage,
         calculateGoalsPercentages,
@@ -341,19 +353,10 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         createInvestmentTransaction,
         updateGoal,
         createGoal,
-        goalsDataGetter,
         setTransactionsAsPaid,
-        savingsDataGetter,
         setTransactionData,
         deleteTransaction,
         updateTransaction,
-        expensesDataGetter,
-        incomesDataGetter,
-        transactionsDataGetter,
         setTimeRange,
-        notOrderedSavingsData,
-        notOrderedExpensesData,
-        notOrderedIncomesData
     }
-
-})
+}, { persist: true })

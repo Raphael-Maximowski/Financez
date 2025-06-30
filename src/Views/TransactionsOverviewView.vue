@@ -31,7 +31,7 @@ const savingsData = computed(() => transactionsManagement.savingsDataGetter)
 const sortedSavings = computed(() => transactionsManagement.notOrderedSavingsData)
 const incomesData = computed(() => transactionsManagement.incomesDataGetter)
 const sortedIncomes = computed(() => transactionsManagement.notOrderedIncomesData)
-const sortedTransactions = computed(() => [...sortedIncomes.value, ...sortedExpenses.value].sort((a, b) => a.notFormatedDate - b.notFormatedDate))
+const sortedTransactions = computed(() => [...sortedIncomes.value, ...sortedExpenses.value].sort((a, b) => new Date(a.notFormatedDate) - new Date(b.notFormatedDate)))
 
 const transactionsTimeRange = computed(() => transactionsManagement.transactionsTimeRangeGetter)
 const monthsArray = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
@@ -74,8 +74,8 @@ const handleYearTimeRange = (transactions, colors) => {
       const firstDayOfMonth = new Date(2025, i, 1)
       const firstDayOfNextMonth = new Date(2025, i + 1, 1)
 
-      const totalValueRelatedToMonth = transactions.filter((t) => t.notFormatedDate >= firstDayOfMonth
-          && t.notFormatedDate < firstDayOfNextMonth
+      const totalValueRelatedToMonth = transactions.filter((t) => new Date(t.notFormatedDate) >= firstDayOfMonth
+          && new Date(t.notFormatedDate) < firstDayOfNextMonth
       ).reduce((acc, transaction) => acc + parseInt(transaction.value), 0)
 
       monthsRelatedToTransaction.push(monthsArray[i + 1])
@@ -324,7 +324,7 @@ const resetShouldCalculateDashboardData = () => {
   transactionsManagement.setShouldCalculateDashboardData(false)
 }
 
-watch(shouldCalculateDashboardData, (newValue) => {
+watch(shouldCalculateDashboardData, () => {
   checkShouldCalculateData()
 }, { deep: true })
 
