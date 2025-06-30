@@ -331,7 +331,18 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         notificationManagement.displaySuccessMessage("Transaction Created With Success")
     }
 
+    const resetData = () => {
+        transactionsData.value.expenses = []
+        transactionsData.value.incomes = []
+        transactionsData.value.savings = [] 
+        transactionsData.value.goals = [] 
+    
+        setShouldCalculateDashboardData(true)
+        notificationManagement.displaySuccessMessage("Personal Mode Applied! Enjoy")
+    }
+
     return {
+        resetData,
         defaultExpenses,
         transactionsData,
         shouldCalculateDashboardDataGetters,
