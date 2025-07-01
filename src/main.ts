@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
-import router from './router'
+import router from './router/index.ts'
 import VCalendar from 'v-calendar';
 import money from 'v-money3'
 import 'bootstrap/dist/css/bootstrap.min.css'

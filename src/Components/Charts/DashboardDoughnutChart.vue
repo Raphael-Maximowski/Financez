@@ -3,17 +3,19 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
 import { Doughnut } from 'vue-chartjs'
 import {dashBoardModule} from "@/Store/DashBoardModule.ts";
 import {computed, onMounted} from "vue";
+import type { dashBoardDataInterface } from '@/Typescript/Interfaces/DashBoardInterfaces';
+import type { DoughnutChartInterface, chartOptions } from '@/Typescript/Interfaces/ChartInterfaces';
 ChartJS.register(ArcElement, Tooltip, Legend)
 
 const dashBoardManagement = dashBoardModule()
-const dashBoardData = computed(() => dashBoardManagement.dashboardDataGetter)
-const chartReadyToRender = computed(() => {
+const dashBoardData = computed<dashBoardDataInterface[]>(() => dashBoardManagement.dashboardDataGetter)
+const chartReadyToRender = computed<boolean>((): boolean => {
   const incomeValue = Array.isArray(dashBoardData.value) && dashBoardData.value[1] && dashBoardData.value[1].value
   const expenseValue = Array.isArray(dashBoardData.value) && dashBoardData.value[2] && dashBoardData.value[2].value
-  return incomeValue && expenseValue
+  return Boolean(incomeValue && expenseValue)
 })
 
-const data = computed(() => ({
+const data = computed<any>(() => ({
   labels: ['Income', 'Expense'],
   datasets: [
     {
@@ -23,12 +25,10 @@ const data = computed(() => ({
   ]
 }))
 
-const options = {
+const options: chartOptions = {
   responsive: true,
   maintainAspectRatio: false
 }
-
-
 </script>
 
 <template>

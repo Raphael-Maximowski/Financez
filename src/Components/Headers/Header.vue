@@ -1,21 +1,21 @@
-<script setup>
+<script setup lang="ts">
 import {useRouter} from "vue-router";
 import {modalModule} from "@/Store/ModalModule.ts";
 
 const router = useRouter()
-const date = new Date();
 const modalManagement = modalModule()
-const formattedDate = date.toLocaleDateString('en-US', {
+const date: Date = new Date();
+const formattedDate: string = date.toLocaleDateString('en-US', {
   day: '2-digit',
   month: 'long',
   year: 'numeric'
 }).replace(' ', ', ');
 
-const redirectUser = () => {
+const redirectUser = (): void => {
   router.push({name: 'DashBoard View'})
 }
 
-const openRealModeModal = () => {
+const openRealModeModal = (): void => {
   modalManagement.setModalState({ name: 'ResetDataModal' })
 }
 

@@ -1,6 +1,7 @@
 export interface dashBoardDataInterface {
     name: string;
     value: number;
-    router: string;
-    percentage: number
+    routerParams: string;
+    text: string;
+    icon: string;
 }

@@ -12,32 +12,35 @@ import CreateGoal from "@/Components/Modals/GoalManagementModal.vue";
 import {modalModule} from "@/Store/ModalModule.ts";
 import InvestmentModal from "@/Components/Modals/InvestmentManagementModal.vue";
 import {chartsModule} from "@/Store/ChartsModule.ts";
+import type { GoalDataInterface } from "@/Typescript/Interfaces/GoalInterfaces";
+import type { GoalInterface, SavingTransactionInterface, TransactionInterface, transactionsDataInObject } from "@/Typescript/Interfaces/TransactionsInterface";
+import type { lineChartDataSetInterface } from "@/Typescript/Interfaces/ChartInterfaces";
 
 const router = useRouter()
 const route = useRoute()
 const transactionsManagement = transactionsModule()
 const modalManagement = modalModule()
 const chartModule = chartsModule()
-const modalName = computed(() => modalManagement.modalNameGetter)
-const goalsDataComputed = computed(() => transactionsManagement.goalsDataGetter)
-const goalsData = ref(goalsDataComputed.value.sort((a, b) => a.index - b.index));
-const inSavingsView = computed(() => route.name === 'Savings View')
-const shouldCalculateDashboardData = computed(() => transactionsManagement.shouldCalculateDashboardDataGetters)
+const modalName = computed<string | null>(() => modalManagement.modalNameGetter)
+const goalsDataComputed = computed<GoalInterface[]>(() => transactionsManagement.goalsDataGetter)
+const goalsData = ref<GoalInterface[]>(goalsDataComputed.value.sort((a, b) => a?.index - b.index));
+const inSavingsView = computed<Boolean>(() => route.name === 'Savings View')
+const shouldCalculateDashboardData = computed<Boolean>(() => transactionsManagement.shouldCalculateDashboardDataGetters)
 
-const transactionsData = computed(() => transactionsManagement.transactionsDataGetter)
-const expensesData = computed(() => transactionsManagement.expensesDataGetter)
-const sortedExpenses = computed(() => transactionsManagement.notOrderedExpensesData)
-const savingsData = computed(() => transactionsManagement.savingsDataGetter)
-const sortedSavings = computed(() => transactionsManagement.notOrderedSavingsData)
-const incomesData = computed(() => transactionsManagement.incomesDataGetter)
-const sortedIncomes = computed(() => transactionsManagement.notOrderedIncomesData)
-const sortedTransactions = computed(() => [...sortedIncomes.value, ...sortedExpenses.value].sort((a, b) => new Date(a.notFormatedDate) - new Date(b.notFormatedDate)))
+const transactionsData = computed<TransactionInterface[]>(() => transactionsManagement.transactionsDataGetter)
+const expensesData = computed<TransactionInterface[]>(() => transactionsManagement.expensesDataGetter)
+const sortedExpenses = computed<TransactionInterface[]>(() => transactionsManagement.notOrderedExpensesData)
+const savingsData = computed<SavingTransactionInterface[]>(() => transactionsManagement.savingsDataGetter)
+const sortedSavings = computed<SavingTransactionInterface[]>(() => transactionsManagement.notOrderedSavingsData)
+const incomesData = computed<TransactionInterface[]>(() => transactionsManagement.incomesDataGetter)
+const sortedIncomes = computed<TransactionInterface[]>(() => transactionsManagement.notOrderedIncomesData)
+const sortedTransactions = computed<TransactionInterface[]>(() => [...sortedIncomes.value, ...sortedExpenses.value].sort((a, b) => new Date(a.notFormatedDate).getTime() - new Date(b.notFormatedDate).getTime()))
 
-const transactionsTimeRange = computed(() => transactionsManagement.transactionsTimeRangeGetter)
-const monthsArray = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
-const labelMonthsForLineChart = ref([])
+const transactionsTimeRange = computed<string | Date>(() => transactionsManagement.transactionsTimeRangeGetter)
+const monthsArray: string[] = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+const labelMonthsForLineChart = ref<string[]>([])
 
-const openCreateOrUpdateGoal = (goalData = null) => {
+const openCreateOrUpdateGoal = (goalData: GoalInterface | null = null): void => {
   modalManagement.setModalState({
     state: true,
     name: 'Create Or Update Goal',
@@ -45,21 +48,21 @@ const openCreateOrUpdateGoal = (goalData = null) => {
   })
 }
 
-const registerGoalMovement = (event) => {
+const registerGoalMovement = (event: any): void => {
   transactionsManagement.orderGoalsArray(event.moved)
 }
 
-const setValueToReference = () => {
+const setValueToReference = (): void => {
   goalsData.value = goalsDataComputed.value
 }
 
-const redirectToReportsView = () => {
+const redirectToReportsView = (): void => {
   router.push({name: 'Reports View'})
 }
 
-const handleYearTimeRange = (transactions, colors) => {
+const handleYearTimeRange = (transactions: transactionsDataInObject, colors: string[]): lineChartDataSetInterface[] => {
   let lastMonthRelatedToTransactions = 11
-  const transactionsDataSets = []
+  const transactionsDataSets: lineChartDataSetInterface[] = []
   labelMonthsForLineChart.value = []
 
   for (let i = 0; i < lastMonthRelatedToTransactions; i++) {
@@ -92,7 +95,7 @@ const handleYearTimeRange = (transactions, colors) => {
   return transactionsDataSets
 }
 
-const setIncomesViewData = () => {
+const setIncomesViewData = (): void => {
   const incomesDoughnutData = [0, 0]
   sortedIncomes.value.map(i => {
     if (i.state === 'Paid') return incomesDoughnutData[0] += parseInt(i.value)
@@ -138,7 +141,7 @@ const setIncomesViewData = () => {
   chartModule.setLineChartConfig(dataSetsIncomes, lineChartLabels)
 }
 
-const setDataBasedInRoute = async () => {
+const setDataBasedInRoute = async (): Promise<void> => {
   if (route.name === 'Savings View') {
     setSavingsViewData()
     calcGoalsPercentage()
@@ -158,7 +161,7 @@ const setDataBasedInRoute = async () => {
   }
 }
 
-const setExpensesViewData = () => {
+const setExpensesViewData = (): void => {
   const expensesDoughnutData = [0, 0]
   sortedExpenses.value.map((e) => {
     if (e.state === 'Paid') return expensesDoughnutData[0] += parseInt(e.value)
@@ -205,7 +208,7 @@ const setExpensesViewData = () => {
   chartModule.setLineChartConfig(dataSetsExpenses, lineChartLabel)
 }
 
-const setTotalBalanceViewData = () => {
+const setTotalBalanceViewData = (): void => {
   const uniqueDates = [
     ...new Set(sortedTransactions.value.map(sortedTransaction => sortedTransaction.date))
   ]
@@ -237,14 +240,14 @@ const setTotalBalanceViewData = () => {
       {
         Expenses: sortedExpenses.value,
         incomes: sortedIncomes.value
-      }, ['#DC3545', '#28A745'], ['Expenses', 'Incomes'])
+      }, ['#DC3545', '#28A745'])
 
   const dataSetsTotalBalance = transactionsTimeRange.value === 'year' ?
       handleYearTimeRange(
           {
             Expenses: sortedExpenses.value,
             incomes: sortedIncomes.value
-          }, ['#DC3545', '#28A745'], ['Expenses', 'Incomes']
+          }, ['#DC3545', '#28A745']
       )
       : [
         {
@@ -279,13 +282,13 @@ const setTotalBalanceViewData = () => {
   chartModule.setLineChartConfig(dataSetsTotalBalance, lineChatLabels)
 }
 
-const calcGoalsPercentage = () => {
+const calcGoalsPercentage = (): void => {
   transactionsManagement.calculateGoalsPercentages()
 }
 
-const setSavingsViewData = () => {
+const setSavingsViewData = (): void => {
   const uniqueSavingsData = [
-    ...new Set(sortedSavings.value.map(s => s.date))
+    ...new Set(sortedSavings.value.map(s => String(s.date)))
   ]
 
   const savingsDataFiltered = uniqueSavingsData.map((uniqueDate) => {
@@ -313,26 +316,26 @@ const setSavingsViewData = () => {
   chartModule.setLineChartConfig(savingsDataSet, lineChartLabels)
 }
 
-const checkShouldCalculateData = () => {
+const checkShouldCalculateData = (): void => {
   if (shouldCalculateDashboardData.value) {
     setDataBasedInRoute()
     resetShouldCalculateDashboardData()
   }
 }
 
-const resetShouldCalculateDashboardData = () => {
+const resetShouldCalculateDashboardData = (): void => {
   transactionsManagement.setShouldCalculateDashboardData(false)
 }
 
-watch(shouldCalculateDashboardData, () => {
+watch(shouldCalculateDashboardData, (): void => {
   checkShouldCalculateData()
 }, { deep: true })
 
-watch([route, transactionsTimeRange], () => {
+watch([route, transactionsTimeRange], (): void => {
   setDataBasedInRoute()
 })
 
-watch(goalsDataComputed, () => {
+watch(goalsDataComputed, (): void => {
   setValueToReference()
 }, {deep: true})
 </script>
@@ -364,8 +367,8 @@ watch(goalsDataComputed, () => {
               v-model="goalsData"
               tag="div"
               handle=".bi-three-dots-vertical"
-              @change="event=> registerGoalMovement(event)"
-              :item-key="key => key"
+              @change="(event: any)=> registerGoalMovement(event)"
+              :item-key="(key: string) => key"
               animation="350"
           >
             <template #item="{ element }">

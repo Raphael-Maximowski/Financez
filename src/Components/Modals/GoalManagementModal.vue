@@ -7,8 +7,10 @@ import {useForm} from "vee-validate";
 import * as yup from 'yup';
 import { unformat, format } from "v-money3";
 import {notificationModule} from "@/Store/NotificationModule.ts";
+import type { moneyMaskSettingsInterface } from "@/Typescript/Interfaces/AssociatedToLibInterfaces";
+import type { GoalDataInterface } from "@/Typescript/Interfaces/GoalInterfaces";
 
-const moneyConfig = {
+const moneyConfig: moneyMaskSettingsInterface = {
   decimal: ',',
   thousands: '.',
   prefix: 'U$ ',
@@ -32,33 +34,36 @@ const transactionsManagement = transactionsModule()
 const [ name ] = defineField('name')
 const [ value ] = defineField('value')
 const [ description ] = defineField('description')
-const goalToEdit = computed(() => modalManagement.modalDataGetter)
-const valueMockup = ref(null)
-const modalInEditMode = ref(goalToEdit.value ? false : true)
+const goalToEdit = computed<GoalDataInterface>(() => modalManagement.modalDataGetter)
+const valueMockup = ref<string | null>(null)
+const modalInEditMode = ref<Boolean>(goalToEdit.value ? false : true)
 
-const handleUpdateGoalState = () => {
+const handleUpdateGoalState = (): void => {
   modalInEditMode.value = !modalInEditMode.value
 }
 
-const closeModal = () => {
+const closeModal = (): void => {
   modalManagement.setModalState({ state: false })
 }
 
-const deleteGoal = () => {
+const deleteGoal = (): void => {
   transactionsManagement.deleteGoal(goalToEdit.value)
   closeModal()
 }
 
-const validateData = async () => {
+const validateData = async (): Promise<Boolean | void> => {
   const isValid = await validate()
   if (isValid.valid && value.value !== '0.00') return true
   if (value.value === '0.00') return notificationManagement.displayErrorMessage("Value Field Is Required")
   const errors = Object.values(isValid.errors)
-  notificationManagement.displayErrorMessage(errors[0])
+if (errors[0]) {
+    notificationManagement.displayErrorMessage(errors[0])
+}
+
   return false
 }
 
-const createGoal = async () => {
+const createGoal = async (): Promise<void> => {
   if (!await validateData()) return
 
   const goalPayload = {
@@ -70,7 +75,9 @@ const createGoal = async () => {
   closeModal()
 }
 
-const updateGoal = async () => {
+const updateGoal = async (): Promise<void> => {
+  if (!goalToEdit.value) return
+
   if (!await validateData()) return
   const { name: goalName, value: goalValue, description: goalDescription , ...rest } = goalToEdit.value
 
@@ -85,7 +92,7 @@ const updateGoal = async () => {
   closeModal()
 }
 
-const setGoalDataToUpdate = async () => {
+const setGoalDataToUpdate = async (): Promise<void> => {
   if (!goalToEdit.value) return
 
   setValues({
@@ -94,22 +101,24 @@ const setGoalDataToUpdate = async () => {
     description: goalToEdit?.value?.description || ''
   })
 
-  await nextTick(() => {
-    valueMockup.value = format(goalToEdit.value.value, moneyConfig)
+  await nextTick((): void => {
+    valueMockup.value = format(goalToEdit?.value?.value, moneyConfig)
   })
 }
 
-watch(valueMockup, () => {
-  setValues({
+watch(valueMockup, (): void => {
+  if (typeof valueMockup.value === 'string') {
+    setValues({
     value: unformat(valueMockup.value, moneyConfig)
   })
+  }
 })
 
-onMounted(() => {
+onMounted((): void => {
   setGoalDataToUpdate()
 })
 
-watch(modalInEditMode, () => {
+watch(modalInEditMode, (): void => {
   setGoalDataToUpdate()
 })
 </script>
@@ -155,11 +164,11 @@ watch(modalInEditMode, () => {
             <div class="d-flex w-100 gap-2">
               <div class="w-50">
                 <label class="fw-bold">Amount Saved: </label>
-                <p>U$ {{ goalToEdit.amountSaved }}</p>
+                <p>U$ {{ goalToEdit?.amountSaved }}</p>
               </div>
               <div class="w-50">
                 <label class="fw-bold">Amount Pendent: </label>
-                <p>U$ {{ goalToEdit.amountPendent}}</p>
+                <p>U$ {{ goalToEdit?.amountPendent}}</p>
               </div>
             </div>
 

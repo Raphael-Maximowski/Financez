@@ -7,39 +7,41 @@ import {Bar} from 'vue-chartjs'
 import {Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale} from 'chart.js'
 import {categoriesModule} from "@/Store/CategoriesModule.ts";
 import ReportBarChart from "@/Components/Charts/ReportBarChart.vue";
+import type { CategoriesInterface, SavingTransactionInterface, TransactionInterface, transactionsDataInObject, transactionsParsedInWeeks } from "@/Typescript/Interfaces/TransactionsInterface";
+import type { calculateDataBasedInWeeksInterface, chartOptions } from "@/Typescript/Interfaces/ChartInterfaces";
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 const transactionsModule = transactionsModuleImported()
 const categoriesManagement = categoriesModule()
-const categoriesData = computed(() => categoriesManagement.categoriesDataGetter)
-const expensesData = computed(() => transactionsModule.expensesDataGetter)
-const incomesData = computed(() => transactionsModule.incomesDataGetter)
-const savingsData = computed(() => transactionsModule.savingsDataGetter)
-const reportTypeSelected = ref(0)
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-const reportsType = ["Total Balance", "Category", "Incomes", "Expenses", "Savings"]
-const actualDate = new Date()
-const timeRangeSelected = ref(actualDate.getMonth())
+const categoriesData = computed<CategoriesInterface>(() => categoriesManagement.categoriesDataGetter)
+const expensesData = computed<TransactionInterface[]>(() => transactionsModule.expensesDataGetter)
+const incomesData = computed<TransactionInterface[]>(() => transactionsModule.incomesDataGetter)
+const savingsData = computed<SavingTransactionInterface[]>(() => transactionsModule.savingsDataGetter)
+const reportTypeSelected = ref<number>(0)
+const months: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+const reportsType: string[] = ["Total Balance", "Category", "Incomes", "Expenses", "Savings"]
+const actualDate: Date = new Date()
+const timeRangeSelected = ref<number>(actualDate.getMonth())
 const dataSet = ref()
-const options = {
+const options: chartOptions = {
   responsive: true,
   maintainAspectRatio: false
 }
 
-const setTimeRangeForMonth = () => {
+const setTimeRangeForMonth = (): void => {
   transactionsModule.setTimeRange(handleTimeRange('month'))
 }
 
-const setCustomTimeRange = () => {
+const setCustomTimeRange = (): void => {
   transactionsModule.setTimeRange(handleCustomMonthTimeRange(timeRangeSelected.value))
 }
 
-const calculateDataBasedInWeeks = (transactionsData) => {
+const calculateDataBasedInWeeks = (transactionsData: transactionsDataInObject): calculateDataBasedInWeeksInterface => {
   const objectKeys = Object.keys(transactionsData)
 
   const dataSets = objectKeys.map((key) => {
-    const dataParseInWeeks = {}
+    const dataParseInWeeks: transactionsParsedInWeeks = {}
     const transactions = transactionsData[key]
     transactions.forEach((transaction) => {
       const transactionsDate = new Date(transaction.notFormatedDate)
@@ -54,8 +56,8 @@ const calculateDataBasedInWeeks = (transactionsData) => {
     })
 
     const keysWeek = Object.keys(dataParseInWeeks)
-    const valuesWeek = keysWeek.map((key) => {
-      return dataParseInWeeks[key].reduce((acc, item) => acc + parseFloat(item?.value || 0), 0)
+    const valuesWeek = keysWeek.map((key: string) => {
+      return dataParseInWeeks[key].reduce((acc, item) => acc + parseFloat(item?.value || '0'), 0)
     })
 
     return {
@@ -66,6 +68,7 @@ const calculateDataBasedInWeeks = (transactionsData) => {
 
   if (objectKeys.length === 1) {
     const {label, ...rest} = dataSets[0]
+    console.log("Set: ", dataSets[0])
     return {
       ...rest,
       chartLabel: label.map((weekLabel) => `Week ${weekLabel}`)
@@ -95,7 +98,7 @@ const calculateDataBasedInWeeks = (transactionsData) => {
   }
 }
 
-const calculateDataSet = () => {
+const calculateDataSet = (): void => {
   switch (reportTypeSelected.value) {
     case 0:
       const totalBalanceCalc = calculateDataBasedInWeeks({incomes: incomesData.value, expenses: expensesData.value})
@@ -104,12 +107,12 @@ const calculateDataSet = () => {
         datasets: [
           {
             label: 'Incomes',
-            data: totalBalanceCalc.values.incomes,
+            data: Array.isArray(totalBalanceCalc.values) ? [] : totalBalanceCalc.values.incomes,
             backgroundColor: '#28A745'
           },
           {
             label: 'Expenses',
-            data: totalBalanceCalc.values.expenses,
+            data: Array.isArray(totalBalanceCalc.values) ? [] : totalBalanceCalc.values.expenses,
             backgroundColor: '#DC3545'
           }
         ]
@@ -120,7 +123,7 @@ const calculateDataSet = () => {
         const categoriesTitles = categoriesKeys.map((categoryKey) => categoriesData.value[categoryKey].name)
         const categoryColors = categoriesKeys.map((categoryKey) => categoriesData.value[categoryKey].color)
       const valuePerCategory = categoriesKeys.map((key) => {
-        return expensesData.value.filter((expense) => expense.categories && expense.categories.includes(key))
+        return expensesData.value.filter((expense) => expense.categories &&  Array.isArray(expense.categories) && expense.categories.includes(key))
             .reduce((acc, expenseInCategory) => acc + parseFloat(expenseInCategory.value), 0)
       })
 
@@ -178,19 +181,19 @@ const calculateDataSet = () => {
   }
 }
 
-watch([savingsData, incomesData, expensesData], () => {
+watch([savingsData, incomesData, expensesData], (): void => {
   calculateDataSet()
 })
 
-watch(timeRangeSelected, () => {
+watch(timeRangeSelected, (): void => {
   setCustomTimeRange()
 })
 
-watch(reportTypeSelected, () => {
+watch(reportTypeSelected, (): void => {
   calculateDataSet()
 })
 
-onMounted(() => {
+onMounted((): void => {
   setTimeRangeForMonth()
   calculateDataSet()
 })

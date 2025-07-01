@@ -3,26 +3,29 @@ import {computed, onMounted, ref, watch} from "vue";
 import { unformat } from "v-money3";
 import {notificationModule} from "@/Store/NotificationModule.ts";
 import {transactionsModule} from "@/Store/TransactionsModule.ts";
+import type { calendarMaskInterface, moneyMaskSettingsInterface  } from "@/Typescript/Interfaces/AssociatedToLibInterfaces";
+import type { GoalDataInterface } from "@/Typescript/Interfaces/GoalInterfaces";
+import type { GoalInterface } from "@/Typescript/Interfaces/TransactionsInterface";
 
-const props = defineProps({
-  goalData: { type: Object, required: true },
-  modalData: { type: Object, required: true },
-  modalInEditMode: { type: Boolean, required: true }
-})
+const props = defineProps<{
+  goalData: GoalInterface,
+  modalData: any,
+  modalInEditMode: boolean
+}>()
 
-const investmentsAssociatedToGoal = computed(() => props?.goalData?.transactionsAssociated || [])
 const transactionsManagement = transactionsModule()
 const notificationManagement = notificationModule()
-const investmentValue = ref()
-const investmentMock = ref()
-const investmentDate = ref()
-const createInvestment = ref(false)
-const callendarState = ref(false)
-const historyState = ref(props.modalInEditMode && props.modalData.associatedGoal === props.goalData.id)
-const calendarMask = {
+const investmentsAssociatedToGoal = computed(() => props?.goalData?.transactionsAssociated || [])
+const investmentValue = ref<string | number | null>(null)
+const investmentMock = ref<string | null>(null)
+const investmentDate = ref<string | null>(null)
+const createInvestment = ref<boolean>(false)
+const callendarState = ref<boolean>(false)
+const historyState = ref<boolean>(props.modalInEditMode && props.modalData.associatedGoal === props.goalData.id)
+const calendarMask: calendarMaskInterface = {
   modelValue: 'DD/MM/YYYY'
 }
-const moneyConfig = {
+const moneyConfig: moneyMaskSettingsInterface = {
   decimal: ',',
   thousands: '.',
   prefix: 'U$ ',
@@ -30,14 +33,14 @@ const moneyConfig = {
   masked: true
 }
 
-const handleHistoryState = async () => {
+const handleHistoryState = async (): Promise<void> => {
   createInvestment.value && ( await handleCreateInvestment())
   historyState.value = !historyState.value
 }
 
-const deleteInvestment = (investmentId) => {
+const deleteInvestment = (investmentId: number): void => {
   const deleteInvestmentPayload = {
-    goalId: props.goalData.id,
+    goalId: props?.goalData?.id || 0,
     investmentId: investmentId
   }
 
@@ -45,27 +48,27 @@ const deleteInvestment = (investmentId) => {
   handleHistoryState()
 }
 
-const handleCallendarState = () => {
+const handleCallendarState = (): void => {
   callendarState.value = !callendarState.value
 }
 
-const handleCreateInvestment = async () => {
+const handleCreateInvestment = async (): Promise<void> => {
   historyState.value && (await handleHistoryState())
   createInvestment.value = !createInvestment.value
   !createInvestment.value && callendarState.value && (handleCallendarState())
 }
 
-const saveInvestment = () => {
+const saveInvestment = (): void => {
   if (!investmentValue.value || !investmentDate.value) return notificationManagement.displayErrorMessage("All Fields Are Required")
   const [day, month, year] = investmentDate.value.split("/").map(Number);
   const investmentPayload = {
-    goalId: props.goalData.id,
+    goalId: props?.goalData?.id || 0,
     transactionData: {
-      name: props.goalData.name,
+      name: props?.goalData?.name || '',
       notFormatedDate: new Date(year, month - 1, day),
       date: investmentDate.value,
-      value: investmentValue.value,
-      associatedGoal: props.goalData.id
+      value: String(investmentValue.value),
+      associatedGoal: props?.goalData?.id || 0
     }
   }
 
@@ -73,10 +76,11 @@ const saveInvestment = () => {
   handleHistoryState()
 }
 
-watch(investmentMock, (newValue) => {
-  investmentValue.value = unformat(newValue, moneyConfig)
+watch(investmentMock, (newValue: string | null): void => {
+  if (newValue !== null) {
+      investmentValue.value = unformat(newValue, moneyConfig)
+  }
 })
-
 </script>
 
 <template>
@@ -114,14 +118,14 @@ watch(investmentMock, (newValue) => {
   </div>
   <div v-if="historyState" class="py-2 px-3 history-container">
     <div
-        v-for="investment in investmentsAssociatedToGoal.sort((a, b) => b.notFormatedDate - a.notFormatedDate)"
+        v-for="investment in investmentsAssociatedToGoal.sort((a, b) => new Date(b.notFormatedDate).getTime() - new Date(a.notFormatedDate).getTime())"
         :key="investment.id"
         class="d-flex w-100 align-items-center  justify-content-between"
     >
       <p class="mb-0">U$ {{ investment.value }}</p>
       <div class="d-flex align-items-center gap-3">
         <p class="mb-0">{{ investment.date }}</p>
-        <i @click="deleteInvestment(investment.id)" class="bi bi-trash"></i>
+        <i @click="deleteInvestment(investment?.id || -1)" class="bi bi-trash"></i>
       </div>
 
     </div>
