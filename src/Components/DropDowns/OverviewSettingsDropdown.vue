@@ -6,15 +6,15 @@ import {handleTimeRange} from "@/Utils/formatters.ts";
 
 const route = useRoute()
 const router = useRouter()
-const typeMetrics = ref()
 const transactionsManagement = transactionsModule()
-const timeRange = ref('week')
+const typeMetrics = ref<string>()
+const timeRange = ref<string>('week')
 
-const setActualRoute = () => {
-  typeMetrics.value = route.params.typeTransaction || 'savings'
+const setActualRoute = (): void => {
+  typeMetrics.value =  typeof route.params.typeTransaction === 'string' ? route.params.typeTransaction : 'savings'
 }
 
-const redirectUser = (routeParam) => {
+const redirectUser = (routeParam: string): void => {
   if (routeParam === 'savings') {
     router.push({ name: 'Savings View' })
     return
@@ -22,21 +22,21 @@ const redirectUser = (routeParam) => {
   router.push({name: 'Metrics View', params: {typeTransaction: routeParam}})
 }
 
-const setTimeRange = (timeRange) => {
+const setTimeRange = (timeRange: string): void => {
   transactionsManagement.setTimeRange(handleTimeRange(timeRange))
 }
 
-onMounted(() => {
+onMounted((): void => {
   setActualRoute()
   setTimeRange(timeRange.value)
 })
 
-watch(timeRange, (newValue) => {
+watch(timeRange, (newValue: string): void => {
   setTimeRange(newValue)
 })
 
-watch(typeMetrics, (newValue) => {
-  redirectUser(newValue)
+watch(typeMetrics, (newValue: string | undefined): void => {
+  newValue && (redirectUser(newValue))
 })
 </script>
 

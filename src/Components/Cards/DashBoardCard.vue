@@ -5,17 +5,18 @@ import {computed, onMounted, ref, watch} from "vue";
 import {dashBoardModule} from "@/Store/DashBoardModule.ts";
 import {useRouter} from "vue-router";
 import { Tooltip } from 'bootstrap';
+import type { dashBoardDataInterface } from "@/Typescript/Interfaces/DashBoardInterfaces";
 
-const router = useRouter()
-const userSettingsManagement: any = userSettingsModule()
+const router: any = useRouter()
+const userSettingsManagement= userSettingsModule()
 const dashBoardManagement = dashBoardModule()
 const userWidth = computed<number>(() => userSettingsManagement.userWidthGetter)
 const containerWidth = ref<string>('calc(25% - 12px)')
-const dashBoardData = computed(() => dashBoardManagement.dashboardDataGetter)
-const tooltipRef = ref()
+const dashBoardData = computed<dashBoardDataInterface[]>(() => dashBoardManagement.dashboardDataGetter)
+const tooltipRef = ref<HTMLElement[] | null>()
 
 
-const redirectUser = (dashBoardParam) => {
+const redirectUser = (dashBoardParam: string): void => {
   if (dashBoardParam) {
     router.push({ name: 'Metrics View', params: { typeTransaction: dashBoardParam } })
     return
@@ -24,17 +25,13 @@ const redirectUser = (dashBoardParam) => {
   router.push({ name: 'Savings View' })
 }
 
-const initializeToolTip = () => {
+const initializeToolTip = (): void => {
   if (tooltipRef.value) {
     tooltipRef.value.forEach((el) => {
       new Tooltip(el)
     })
   }
 }
-
-onMounted(() => {
-  initializeToolTip()
-})
 
 watch(userWidth, (newValue: number): void => {
   containerWidth.value = 'calc(25% - 12px)'
@@ -44,6 +41,10 @@ watch(userWidth, (newValue: number): void => {
   } else if (newValue <= 1200) {
     containerWidth.value = 'calc(50% - 12px)'
   }
+})
+
+onMounted((): void => {
+  initializeToolTip()
 })
 </script>
 

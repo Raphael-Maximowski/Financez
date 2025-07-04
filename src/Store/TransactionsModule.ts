@@ -2,12 +2,14 @@ import {defineStore} from "pinia";
 import {computed, ref} from "vue";
 import {expensesDataMockUp, goalsMockUp, incomesDataMockUp, savingsDataMockUp} from "@/Data/TransactionsData.ts";
 import {notificationModule} from "@/Store/NotificationModule.ts";
+import type { SavingTransactionInterface, timeRangeInterface, TransactionInterface, TransactionsModuleState } from "@/Typescript/Interfaces/TransactionsInterface";
+import type { GoalDataInterface } from "@/Typescript/Interfaces/GoalInterfaces";
 
 export const transactionsModule = defineStore('transactionsModule', () => {
 
     const notificationManagement = notificationModule()
 
-    const transactionsData = ref({
+    const transactionsData = ref<TransactionsModuleState>({
         expenses: expensesDataMockUp,
         incomes: incomesDataMockUp,
         savings: savingsDataMockUp,
@@ -29,52 +31,52 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     const transactionsTimeRangeGetter = computed(() => transactionsData.value.timeRange.name)
 
     const notOrderedSavingsData = computed(() => transactionsData.value.savings
-        .sort((a, b) => new Date(a.notFormatedDate) - new Date(b.notFormatedDate))
-        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
-            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(a.notFormatedDate).getTime() - new Date(b.notFormatedDate).getTime())
+        .filter((t) => new Date(t.notFormatedDate).getTime() >= new Date(transactionsData.value.timeRange.startDate).getTime()
+            && new Date(t.notFormatedDate).getTime() <= new Date(transactionsData.value.timeRange.endDate).getTime()
         ))
 
     const savingsDataGetter = computed(() => [...transactionsData.value.savings]
-        .sort((a, b) => new Date(b.notFormatedDate) - new Date(a.notFormatedDate))
-        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
-            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(b.notFormatedDate).getTime() - new Date(a.notFormatedDate).getTime())
+        .filter((t) => new Date(t.notFormatedDate).getTime() >= new Date(transactionsData.value.timeRange.startDate).getTime()
+            && new Date(t.notFormatedDate).getTime() <= new Date(transactionsData.value.timeRange.endDate).getTime()
         ))
 
     const notOrderedExpensesData = computed(() => transactionsData.value.expenses
-        .sort((a, b) => new Date(a.notFormatedDate) - new Date(b.notFormatedDate))
-        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
-            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(a.notFormatedDate).getTime() - new Date(b.notFormatedDate).getTime())
+        .filter((t) => new Date(t.notFormatedDate).getTime() >= new Date(transactionsData.value.timeRange.startDate).getTime()
+            && new Date(t.notFormatedDate).getTime() <= new Date(transactionsData.value.timeRange.endDate).getTime()
         ))
 
     const expensesDataGetter = computed(() => [...transactionsData.value.expenses]
-        .sort((a ,b) => new Date(b.notFormatedDate) - new Date(a.notFormatedDate))
-        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
-            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
+        .sort((a ,b) => new Date(b.notFormatedDate).getTime() - new Date(a.notFormatedDate).getTime())
+        .filter((t) => new Date(t.notFormatedDate).getTime() >= new Date(transactionsData.value.timeRange.startDate).getTime()
+            && new Date(t.notFormatedDate).getTime() <= new Date(transactionsData.value.timeRange.endDate).getTime()
         ))
 
     const notOrderedIncomesData = computed(() => transactionsData.value.incomes
-        .sort((a, b) => new Date(a.notFormatedDate) - new Date(b.notFormatedDate))
-        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
-            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(a.notFormatedDate).getTime() - new Date(b.notFormatedDate).getTime())
+        .filter((t) => new Date(t.notFormatedDate).getTime() >= new Date(transactionsData.value.timeRange.startDate).getTime()
+            && new Date(t.notFormatedDate).getTime() <= new Date(transactionsData.value.timeRange.endDate).getTime()
         ))
     const incomesDataGetter = computed(() => [...transactionsData.value.incomes]
-        .sort((a, b) => new Date(b.notFormatedDate) - new Date(a.notFormatedDate))
-        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
-            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(b.notFormatedDate).getTime() - new Date(a.notFormatedDate).getTime())
+        .filter((t) => new Date(t.notFormatedDate).getTime() >= new Date(transactionsData.value.timeRange.startDate).getTime()
+            && new Date(t.notFormatedDate).getTime() <= new Date(transactionsData.value.timeRange.endDate).getTime()
         ))
 
 
     const transactionsDataGetter = computed(() => [...expensesDataGetter.value, ...incomesDataGetter.value]
-        .sort((a, b) => new Date(b.notFormatedDate) - new Date(a.notFormatedDate))
-        .filter((t) => new Date(t.notFormatedDate) >= transactionsData.value.timeRange.startDate
-            && new Date(t.notFormatedDate) <= transactionsData.value.timeRange.endDate
+        .sort((a, b) => new Date(b.notFormatedDate).getTime() - new Date(a.notFormatedDate).getTime())
+        .filter((t) => new Date(t.notFormatedDate).getTime() >= new Date(transactionsData.value.timeRange.startDate).getTime()
+            && new Date(t.notFormatedDate).getTime() <= new Date(transactionsData.value.timeRange.endDate).getTime()
         ))
 
-    const setShouldCalculateDashboardData = (state) => {
+    const setShouldCalculateDashboardData = (state: boolean): void => {
         transactionsData.value.shouldCalculateDashboardData = state
     }
 
-    const orderGoalsArray = (event) => {
+    const orderGoalsArray = (event: any): void => {
         const goalMovedIndex = transactionsData.value.goals.findIndex((g) => g.id === event.element.id)
         if (goalMovedIndex !== -1) {
             if (event.newIndex > event.oldIndex) {
@@ -97,7 +99,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         }
     }
 
-    const calculateSpecificGoalPercentage = (goalId) => {
+    const calculateSpecificGoalPercentage = (goalId: number): void => {
         const goalIndex = transactionsData.value.goals.findIndex((g) => g.id === goalId)
 
         if (goalIndex !== -1) {
@@ -112,7 +114,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         }
     }
 
-    const calculateGoalsPercentages = () => {
+    const calculateGoalsPercentages = (): void => {
         transactionsData.value.goals.map((goal, index) => {
             const amountSaved = goal.transactionsAssociated.map((t) => parseInt(t.value)).reduce((a, b) => a + b, 0) || 0
             let amountPendent = parseInt(goal.value) - amountSaved
@@ -128,7 +130,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         })
     }
 
-    const deleteInvestment = (investmentData) => {
+    const deleteInvestment = (investmentData: { goalId: number; investmentId: number }): void => {
         setShouldCalculateDashboardData(true)
         const investmentIndexInSaving = transactionsData.value.savings
             .findIndex((s) => s.id === investmentData.investmentId)
@@ -146,13 +148,13 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         }
     }
 
-    const deleteGoal = (goalData) => {
+    const deleteGoal = (goalData: GoalDataInterface): void => {
         setShouldCalculateDashboardData(true)
         const goalIndex = transactionsData.value.goals.findIndex((g) => g.id === goalData.id)
         if (goalIndex !== -1) {
             transactionsData.value.goals.splice(goalIndex, 1)
             transactionsData.value.goals.map((goal, index) => {
-                if (goal.index > goalData.index) {
+                if (goalData.index && goal.index > goalData.index) {
                     transactionsData.value.goals[index].index--
                 }
             })
@@ -160,13 +162,16 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         }
     }
 
-    const createInvestmentTransaction = (investmentData) => {
+    const createInvestmentTransaction = (investmentData: { goalId: number, transactionData: SavingTransactionInterface }) => {
         setShouldCalculateDashboardData(true)
         if (!investmentData) return
         const investmentIndex = transactionsData.value.goals.findIndex((g) => g.id === investmentData.goalId)
-        if (investmentData === -1) return
+        if (investmentIndex === -1) return
+        const lastSavingId = transactionsData?.value?.savings[transactionsData.value.savings.length - 1].id
         const investmentToPush = {
-            id: transactionsData.value.savings.length === 0 ? 1 : transactionsData.value.savings[transactionsData.value.savings.length - 1].id ++,
+            id: transactionsData.value.savings.length === 0 ? 1 : 
+            lastSavingId ? lastSavingId + 1 : 0
+            ,
             ...investmentData.transactionData
         }
         transactionsData.value.goals[investmentIndex].transactionsAssociated.push(investmentToPush)
@@ -174,15 +179,15 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         calculateSpecificGoalPercentage(investmentData.goalId)
     }
 
-    const updateGoal = (data) => {
+    const updateGoal = (data: GoalDataInterface) => {
         setShouldCalculateDashboardData(true)
         const goalIndex = transactionsData.value.goals.findIndex((g) => g.id === data.id)
-        transactionsData.value.goals[goalIndex] = data
-        calculateSpecificGoalPercentage(data.id)
+        transactionsData.value.goals[goalIndex] = data as Required<GoalDataInterface>;
+        calculateSpecificGoalPercentage(data?.id || 0)
         notificationManagement.displaySuccessMessage("Goal Updated!")
     }
 
-    const createGoal = (data) => {
+    const createGoal = (data: GoalDataInterface) => {
         setShouldCalculateDashboardData(true)
         if (!data) return
         const goalId = transactionsData.value.goals.length === 0 ? 1
@@ -203,7 +208,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         notificationManagement.displaySuccessMessage("Goal Created With Success!")
     }
 
-    const setTransactionsAsPaid = (transactionId, transactionType) => {
+    const setTransactionsAsPaid = (transactionId: number, transactionType: string): void => {
         setShouldCalculateDashboardData(true)
         if (!transactionId || !transactionType) return
         switch (transactionType && transactionType) {
@@ -220,14 +225,14 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         notificationManagement.displaySuccessMessage("Transaction Status Changed!")
     }
 
-    const setTimeRange = (timeRange) => {
+    const setTimeRange = (timeRange: timeRangeInterface): void => {
         if (!timeRange) return
         transactionsData.value.timeRange.startDate = timeRange.startDate
         transactionsData.value.timeRange.endDate = timeRange.endDate
         transactionsData.value.timeRange.name = timeRange.name
     }
 
-    const updateTransaction = (transactionData) => {
+    const updateTransaction = (transactionData: TransactionInterface): void => {
         setShouldCalculateDashboardData(true)
         switch (transactionData.type) {
             case 'Income':
@@ -243,7 +248,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         notificationManagement.displaySuccessMessage("Transaction Edited With Success")
     }
 
-    const deleteTransaction = (transactionData) => {
+    const deleteTransaction = (transactionData: TransactionInterface): void => {
         setShouldCalculateDashboardData(true)
         switch (transactionData.type) {
             case 'Income':
@@ -261,12 +266,12 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         notificationManagement.displaySuccessMessage("Transaction Excluded With Success")
     }
 
-    const handleTransactionInstallment = (transaction) => {
+    const handleTransactionInstallment = (transaction: TransactionInterface): void => {
         setShouldCalculateDashboardData(true)
         const originalTransaction = transaction
-        const originalTransactionDate = originalTransaction.notFormatedDate
+        const originalTransactionDate = new Date(originalTransaction.notFormatedDate)
         const transactionAlreadyRegistered = 1
-        const installmentAmount = originalTransaction.installment - transactionAlreadyRegistered
+        const installmentAmount = originalTransaction?.installment || 0 - transactionAlreadyRegistered
         for (let i = 0; i < installmentAmount; i++) {
             let transactionYearBasedInInstallment = originalTransactionDate.getFullYear()
             let transactionMonthBasedInInstallment = originalTransactionDate.getMonth() + (i + 1)
@@ -280,7 +285,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
             const transactionToPush = {
                 ...transactionToPushRest,
                 id: originalTransaction.id + (i + 1),
-                installment: originalTransaction.installment - (i + 1),
+                installment: originalTransaction?.installment || 0 - (i + 1),
                 date: `01/${String(transactionMonthBasedInInstallment + 1).padStart(2, '0')}/${transactionYearBasedInInstallment}`,
                 notFormatedDate: new Date(transactionYearBasedInInstallment, transactionMonthBasedInInstallment, 1)
             }
@@ -293,7 +298,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         }
     }
 
-    const setTransactionData = (transactionData) => {
+    const setTransactionData = (transactionData: TransactionInterface): void => {
         setShouldCalculateDashboardData(true)
         switch (transactionData.type) {
             case 'Income':
@@ -331,7 +336,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         notificationManagement.displaySuccessMessage("Transaction Created With Success")
     }
 
-    const resetData = () => {
+    const resetData = (): void => {
         transactionsData.value.expenses = []
         transactionsData.value.incomes = []
         transactionsData.value.savings = [] 

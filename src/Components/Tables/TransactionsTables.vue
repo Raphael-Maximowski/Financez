@@ -6,21 +6,22 @@ import {computed, watch} from "vue";
 import {chartsModule} from "@/Store/ChartsModule.ts";
 import {useRoute} from "vue-router";
 import InvestmentModal from "@/Components/Modals/InvestmentManagementModal.vue";
+import type { SavingTransactionInterface, TransactionInterface } from "@/Typescript/Interfaces/TransactionsInterface";
 
-const modalManagement = modalModule()
 const route = useRoute()
+const modalManagement = modalModule()
 const chartManagement = chartsModule()
-const transactionsData = computed(() => chartManagement.tableTransactionsGetter)
-const tableTitle = computed(() => chartManagement.tableTitleGetter)
+const transactionsData = computed<Array<TransactionInterface | (SavingTransactionInterface & { type?: string })> | SavingTransactionInterface[]>(() => chartManagement.tableTransactionsGetter)
+const tableTitle = computed<string>(() => chartManagement.tableTitleGetter)
 
 
-const openModal = (actionData = null) => {
+const openModal = (actionData: SavingTransactionInterface | TransactionInterface | null = null): void => {
   route.name === 'Savings View' ?
       openInvestmentModal(actionData)
       : openTransactionModal(actionData)
 }
 
-const openInvestmentModal = (investmentData = null) => {
+const openInvestmentModal = (investmentData: SavingTransactionInterface | TransactionInterface | null = null): void => {
   const modalPayload = {
     state: true,
     name: 'Investment Modal',
@@ -30,7 +31,7 @@ const openInvestmentModal = (investmentData = null) => {
   modalManagement.setModalState(modalPayload)
 }
 
-const openTransactionModal = (transactionData = null):void => {
+const openTransactionModal = (transactionData: SavingTransactionInterface | TransactionInterface | null = null):void => {
   const modalPayload = {
     state: true,
     name: 'TransactionsModal',

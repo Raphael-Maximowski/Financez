@@ -7,33 +7,34 @@ import {transactionsModule} from "@/Store/TransactionsModule.ts";
 import {notificationModule} from "@/Store/NotificationModule.ts";
 import {unformat, format} from "v-money3";
 import {categoriesModule} from "@/Store/CategoriesModule.ts";
-
+import type { CategoriesInterface } from "@/Typescript/Interfaces/TransactionsInterface";
+import type { calendarMaskInterface, moneyMaskSettingsInterface } from "@/Typescript/Interfaces/AssociatedToLibInterfaces";
 const modalManagement = modalModule()
 const transactionsManagement = transactionsModule()
 const notificationManagement = notificationModule()
 const categoriesManagement = categoriesModule()
-const categoriesData = computed(() => categoriesManagement.categoriesDataGetter)
-const categoriesKeys = computed(() => Object.keys(categoriesData.value))
-const modalData = computed(() => modalManagement.modalDataGetter)
-const modalInEditMode = computed(() => !!modalData.value)
-const categoriesKeysPaginated = computed(() => categoriesKeys.value.slice(page.value * 5, (page.value + 1) * 5))
-const categoriesNameAssociatedToTransaction = computed(() => {
+const categoriesData = computed<CategoriesInterface>(() => categoriesManagement.categoriesDataGetter)
+const categoriesKeys = computed<string[]>(() =>  typeof categoriesData.value === 'object' ? Object.keys(categoriesData.value) : [])
+const modalData = computed<any>(() => modalManagement.modalDataGetter)
+const modalInEditMode = computed<boolean>(() => !!modalData.value)
+const categoriesKeysPaginated = computed<string[]>(() => categoriesKeys.value.slice(page.value * 5, (page.value + 1) * 5))
+const categoriesNameAssociatedToTransaction = computed<string>(() => {
   let categoriesName = categoriesAssociatedToTransaction.value.map((categoryKey) => categoriesData.value[categoryKey].name)
   return categoriesName.join(', ')
 })
-const categoriesAssociatedToTransaction = ref([])
-const categorySelectState = ref(false)
-const categoryInCreationMode = ref(false)
-const newCategoryColor = ref('#000000')
+const categoriesAssociatedToTransaction = ref<string[]>([])
+const categorySelectState = ref<boolean>(false)
+const categoryInCreationMode = ref<boolean>(false)
+const newCategoryColor = ref<string>('#000000')
 const calendarState = ref<boolean>(false)
 const installmentState = ref<boolean>(false)
-const newCategoryName = ref()
-const valueMockUp = ref()
-const page = ref(0)
-const inputColor = ref()
-const userIsSettingCategoryColor = ref(false)
+const newCategoryName = ref<string>()
+const valueMockUp = ref<string>()
+const page = ref<number>(0)
+const inputColor = ref<HTMLElement>()
+const userIsSettingCategoryColor = ref<boolean>(false)
 const stateOptions: string[] = ['Pendent', 'Paid']
-const moneyConfig = {
+const moneyConfig: moneyMaskSettingsInterface = {
   decimal: ',',
   thousands: '.',
   prefix: 'U$ ',
@@ -51,7 +52,7 @@ const validationSchema = yup.object({
   description: yup.string().optional()
 })
 
-const calendarMask = {
+const calendarMask: calendarMaskInterface = {
   modelValue: 'DD/MM/YYYY'
 }
 
@@ -67,7 +68,7 @@ const [installment] = defineField('installment')
 const [date] = defineField('date')
 const [description] = defineField('description')
 
-const setCalendarState = (state) => {
+const setCalendarState = (state: boolean): void => {
   calendarState.value = state
 }
 
@@ -75,7 +76,7 @@ const closeModal = () => {
   modalManagement.setModalState({state: false})
 }
 
-const cancelInstallmentState = () => {
+const cancelInstallmentState = (): void => {
   installmentState.value = false
   setValues({
     installment: null
@@ -85,13 +86,12 @@ const cancelInstallmentState = () => {
 const validateFormData = async (): Promise<boolean> => {
   const isValid = await validate()
   if (isValid.valid) return true
-  let errorsData = isValid.errors
-  errorsData = Object.values(errorsData)
-  notificationManagement.displayErrorMessage(errorsData[0])
+  const errorsData = Object.values(isValid.errors)
+  notificationManagement.displayErrorMessage(errorsData[0] ?? 'Error')
   return false
 }
 
-const createTransaction = async () => {
+const createTransaction = async (): Promise<void> => {
   if (!await validateFormData()) return
 
   const [day, month, year] = date.value.split("/").map(Number);
@@ -112,15 +112,15 @@ const createTransaction = async () => {
   closeModal()
 }
 
-const deleteTransaction = () => {
+const deleteTransaction = (): void => {
   if (!modalData.value) return
   transactionsManagement.deleteTransaction(modalData.value)
 
   closeModal()
 }
 
-const editTransaction = () => {
-  if (!modalData.value) return
+const editTransaction = async (): Promise<void> => {
+  if (!await validateFormData() || !modalData.value) return
 
   const [day, month, year] = date.value.split("/").map(Number);
 
@@ -141,7 +141,7 @@ const editTransaction = () => {
   closeModal()
 }
 
-const createCategory = () => {
+const createCategory = (): void => {
   if (!newCategoryName.value) {
     notificationManagement.displayErrorMessage("Insert A Valid Category Name!")
     return
@@ -153,12 +153,12 @@ const createCategory = () => {
   handleCategoryInCreationMode()
 }
 
-const clearCreateCategoryData = () => {
+const clearCreateCategoryData = (): void => {
   newCategoryColor.value = '#000000'
-  newCategoryName.value = null
+  newCategoryName.value = undefined
 }
 
-const setVariablesToEdit = () => {
+const setVariablesToEdit = (): void => {
   if (!modalInEditMode.value) return
   valueMockUp.value = format(modalData.value.value, moneyConfig)
   setValues({
@@ -175,11 +175,11 @@ const setVariablesToEdit = () => {
   categoriesAssociatedToTransaction.value = modalData?.value?.categories || []
 }
 
-const resetUserIsSettingCategoryColor = () => {
+const resetUserIsSettingCategoryColor = (): void => {
   userIsSettingCategoryColor.value = false
 }
 
-const openInputColor = () => {
+const openInputColor = (): void => {
   if (inputColor.value) {
     inputColor.value.click()
     userIsSettingCategoryColor.value = true
@@ -187,7 +187,7 @@ const openInputColor = () => {
   inputColor.value && (inputColor.value.click())
 }
 
-const handlePagination = (action) => {
+const handlePagination = (action: string): void => {
   if (action === 'increment') {
     if (categoriesKeysPaginated.value.length >= 5) {
       page.value++
@@ -200,13 +200,14 @@ const handlePagination = (action) => {
   }
 }
 
-const handleCategorySelectState = () => {
+const handleCategorySelectState = (): void => {
   if (userIsSettingCategoryColor.value) return
   categorySelectState.value = !categorySelectState.value
 }
 
-const handleCategoriesAssociatedToTransaction = (event,categoryId) => {
-  const checkboxState = event.target.checked
+const handleCategoriesAssociatedToTransaction = (event: Event,categoryId: string): void => {
+  const target = event.target as HTMLInputElement
+  const checkboxState = target.checked
   if (checkboxState) {
     categoriesAssociatedToTransaction.value.push(categoryId)
     return
@@ -216,7 +217,7 @@ const handleCategoriesAssociatedToTransaction = (event,categoryId) => {
   categoryIndex !== -1 && (categoriesAssociatedToTransaction.value.splice(categoryIndex, 1))
 }
 
-const handleCategoryInCreationMode = () => {
+const handleCategoryInCreationMode = (): void => {
   categoryInCreationMode.value = !categoryInCreationMode.value
 
   if (!categoryInCreationMode.value) {
@@ -224,13 +225,15 @@ const handleCategoryInCreationMode = () => {
   }
 }
 
-watch(valueMockUp, (newValue) => {
-  setValues({
+watch(valueMockUp, (newValue: string | undefined): void => {
+  if (newValue) {
+    setValues({
     value: unformat(newValue, moneyConfig)
   })
+  }
 })
 
-onMounted(() => {
+onMounted((): void => {
   setVariablesToEdit()
 })
 </script>

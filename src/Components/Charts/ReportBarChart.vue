@@ -1,21 +1,23 @@
 <script setup lang="ts">
-import {ref} from "vue";
+import type { chartOptions } from "@/Typescript/Interfaces/ChartInterfaces";
+import {computed, onMounted, ref, watch} from "vue";
 import {Bar} from "vue-chartjs";
+import type { BarChartInterface } from "@/Typescript/Interfaces/ChartInterfaces";
 
-defineProps({
-  dataSet: { type: Object, required: true }
-})
+const props = defineProps<{
+  dataSet: BarChartInterface
+}>()
 
-const options = {
+const dataSetReference = computed<any>(() => props.dataSet)
+const options: chartOptions = {
   responsive: true,
   maintainAspectRatio: false
 }
-
 </script>
 
 <template>
   <div v-if="dataSet" class="px-5 bart-chart-container w-100 flex-grow-1">
-    <Bar :options="options" :data="dataSet"/>
+    <Bar :options="options" :data="dataSetReference"/>
   </div>
 </template>
 

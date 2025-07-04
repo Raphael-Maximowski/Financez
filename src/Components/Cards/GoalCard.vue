@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import {computed, watch} from "vue";
-import {transactionsModule} from "@/Store/TransactionsModule.ts";
+import type { GoalDataInterface } from "@/Typescript/Interfaces/GoalInterfaces";
 
-const props = defineProps({
-  goal: { type: Object, required: true }
-})
+const props = defineProps<{
+  goal: GoalDataInterface
+}>()
 
 </script>
 

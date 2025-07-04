@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import DashBoardCard from "@/Components/Cards/DashBoardCard.vue";
 import TransactionsTables from "@/Components/Tables/TransactionsTables.vue";
 import {computed, onMounted, watch} from "vue";
@@ -7,42 +7,43 @@ import DashBoardDoughnut from "@/Components/Charts/DashboardDoughnutChart.vue";
 import {chartsModule} from "@/Store/ChartsModule.ts";
 import {transactionsModule} from "@/Store/TransactionsModule.ts";
 import {handleTimeRange} from "@/Utils/formatters.ts";
+import type { TransactionInterface } from "@/Typescript/Interfaces/TransactionsInterface";
 
 const chartsManagement = chartsModule()
 const dashBoardManagement = dashBoardModule()
 const transactionsManagement = transactionsModule()
-const expensesData = computed(() => transactionsManagement.expensesDataGetter.filter((t) => t.state === 'Pendent'))
-const shouldCalculateDashboardData = computed(() => transactionsManagement.shouldCalculateDashboardDataGetters)
+const expensesData = computed<TransactionInterface[]>(() => transactionsManagement.expensesDataGetter.filter((t) => t.state === 'Pendent'))
+const shouldCalculateDashboardData = computed<Boolean>(() => transactionsManagement.shouldCalculateDashboardDataGetters)
 
-const checkDashBoardData = () => {
+const checkDashBoardData = (): void => {
   dashBoardManagement.setDashBoardData()
 }
 
-const setMonthTimeRange = () => {
+const setMonthTimeRange = ():  void => {
   transactionsManagement.setTimeRange(handleTimeRange('month'))
 }
 
-const setTableData = () => {
+const setTableData = (): void => {
   chartsManagement.setTableTitle("Pendent Transactions")
   chartsManagement.setTransactionsTableData(expensesData.value)
 }
 
-const resetShouldCalculateDashboardData = () => {
+const resetShouldCalculateDashboardData = (): void => {
   transactionsManagement.setShouldCalculateDashboardData(false)
 }
 
-const calculateDashboardData = async () => {
+const calculateDashboardData = async (): Promise<void> => {
   await checkDashBoardData()
   await setTableData()
   await resetShouldCalculateDashboardData()
 }
 
-onMounted(async () => {
+onMounted(async (): Promise<void> => {
   await setMonthTimeRange()
   await calculateDashboardData()
 })
 
-watch(shouldCalculateDashboardData, (newState) => {
+watch(shouldCalculateDashboardData, (newState: Boolean): void => {
   if (newState) {
     calculateDashboardData()
   }

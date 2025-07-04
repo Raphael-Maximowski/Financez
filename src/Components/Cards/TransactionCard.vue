@@ -1,31 +1,27 @@
 <script setup lang="ts">
-
 import {transactionsModule} from "@/Store/TransactionsModule.ts";
+import type { SavingTransactionInterface, TransactionInterface } from "@/Typescript/Interfaces/TransactionsInterface.ts";
+
+const props = defineProps<{
+  transaction: TransactionInterface | SavingTransactionInterface
+}>()
 
 const transactionsManagement = transactionsModule()
 
-const props = defineProps({
-  transaction: { type: Object, required: true }
-})
-
-const transactionColor = () => {
-  switch (props.transaction.type) {
+const transactionColor = (): string | undefined => {
+  switch (props?.transaction?.type) {
     case 'Income':
       return 'text-success'
-      break;
     case 'Expense':
       return 'text-danger'
-      break;
     case 'Saving':
       return 'text-dark'
-      break;
   }
 }
-const changeTransactionState = () => {
-  transactionsManagement.setTransactionsAsPaid(props.transaction.id, props.transaction.type)
+
+const changeTransactionState = (): void => {
+  transactionsManagement.setTransactionsAsPaid(props?.transaction?.id || 0, props?.transaction?.type || '')
 }
-
-
 </script>
 
 <template>
