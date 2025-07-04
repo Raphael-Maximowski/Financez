@@ -1,21 +1,23 @@
+import type { GoalInterface, SavingTransactionInterface, TransactionInterface } from "@/Typescript/Interfaces/TransactionsInterface";
+
 const actualDate = new Date()
 const actualMonth = actualDate.getMonth()
 const actualYear = actualDate.getFullYear();
 
-export const getTransactionReactiveMonth = (monthsToDecrement) => {
+export const getTransactionReactiveMonth = (monthsToDecrement: number): number => {
     let transactionMonth = actualMonth - monthsToDecrement
     transactionMonth < 0 && (transactionMonth = 12 + transactionMonth)
     return transactionMonth
 }
 
-const oneMonthBefore = getTransactionReactiveMonth(1)
-const twoMonthsBefore = getTransactionReactiveMonth(2)
+const oneMonthBefore: number = getTransactionReactiveMonth(1)
+const twoMonthsBefore: number = getTransactionReactiveMonth(2)
 
-const twoMonthsBeforeToAppearInTemplate = twoMonthsBefore + 1
-const oneMonthBeforeToAppearInTemplate = oneMonthBefore + 1
-const actualMonthToAppearInTemplate = actualMonth + 1
+const twoMonthsBeforeToAppearInTemplate: number = twoMonthsBefore + 1
+const oneMonthBeforeToAppearInTemplate: number = oneMonthBefore + 1
+const actualMonthToAppearInTemplate: number = actualMonth + 1
 
-export const incomesDataMockUp = [
+export const incomesDataMockUp : TransactionInterface[] = [
     {
         id: 1,
         name: 'Income 1',
@@ -399,7 +401,7 @@ export const incomesDataMockUp = [
 
 ];
 
-export const expensesDataMockUp = [
+export const expensesDataMockUp: TransactionInterface[] = [
     {
         id: 1,
         name: 'Expense 1',
@@ -746,7 +748,7 @@ export const expensesDataMockUp = [
     },
 ];
 
-export const savingsDataMockUp = [
+export const savingsDataMockUp: SavingTransactionInterface[] = [
     {
         id: 1,
         name: 'Emergency Money',
@@ -1015,7 +1017,7 @@ export const savingsDataMockUp = [
     }
 ];
 
-export const goalsMockUp = [
+export const goalsMockUp: GoalInterface[] = [
     {
         id: 1,
         name: 'Invest in Cripto',

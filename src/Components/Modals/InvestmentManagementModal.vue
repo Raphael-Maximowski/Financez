@@ -2,16 +2,18 @@
 import GoalInvestmentCard from "@/Components/Cards/GoalInvestmentCard.vue";
 import {modalModule} from "@/Store/ModalModule.ts";
 import {transactionsModule} from "@/Store/TransactionsModule.ts";
-import {computed, onMounted} from "vue";
+import type { GoalDataInterface } from "@/Typescript/Interfaces/GoalInterfaces";
+import type { GoalInterface } from "@/Typescript/Interfaces/TransactionsInterface";
+import {computed, onMounted, watch} from "vue";
 
 const modalManagement = modalModule()
 const transactionsManagement = transactionsModule()
-const modalData = computed(() => modalManagement.modalDataGetter)
-const modalInEditMode = computed(() => (!!modalData.value))
-const goalsData = computed(() => transactionsManagement.goalsDataGetter)
+const modalData = computed<any>(() => modalManagement.modalDataGetter)
+const modalInEditMode = computed<boolean>(() => (!!modalData.value))
+const goalsData = computed<GoalInterface[]>(() => transactionsManagement.goalsDataGetter)
 
 const closeModal = () => {
-  modalManagement.setModalState()
+  modalManagement.setModalState(null)
 }
 </script>
 

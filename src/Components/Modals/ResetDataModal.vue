@@ -5,12 +5,12 @@ import { modalModule } from '@/Store/ModalModule.ts'
 const transactionsMagement = transactionsModule()
 const modalManagement = modalModule()
 
-const resetData = () => {
+const resetData = (): void => {
     transactionsMagement.resetData()
     closeModal()
 }
 
-const closeModal = () => {
+const closeModal = (): void => {
   modalManagement.setModalState()
 }
 

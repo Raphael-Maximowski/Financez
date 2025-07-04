@@ -1,8 +1,9 @@
-export const handleTimeRange = (timeRange) => {
+import type { TimeRangeInterface } from "@/Typescript/Interfaces/FormatterInterfaces"
+
+export const handleTimeRange = (timeRange: string): TimeRangeInterface => {
     const date = new Date()
-    let startDate = null
-    let endDate = null
-    let name = null
+    let startDate = new Date()
+    let endDate = new Date()
 
     switch (timeRange) {
         case 'week':
@@ -34,7 +35,7 @@ export const handleTimeRange = (timeRange) => {
     return ({startDate: startDate, endDate: endDate, name: timeRange})
 }
 
-export const handleCustomMonthTimeRange = (monthIndex) => {
+export const handleCustomMonthTimeRange = (monthIndex: number): TimeRangeInterface => {
     const year = new Date().getFullYear()
     return {
         startDate: new Date(year, monthIndex, 1),
