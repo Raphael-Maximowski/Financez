@@ -37,7 +37,7 @@ const sortedIncomes = computed<TransactionInterface[]>(() => transactionsManagem
 const sortedTransactions = computed<TransactionInterface[]>(() => [...sortedIncomes.value, ...sortedExpenses.value].sort((a, b) => new Date(a.notFormatedDate).getTime() - new Date(b.notFormatedDate).getTime()))
 
 const transactionsTimeRange = computed<string | Date>(() => transactionsManagement.transactionsTimeRangeGetter)
-const monthsArray: string[] = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+const monthsArray: string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 const labelMonthsForLineChart = ref<string[]>([])
 
 const openCreateOrUpdateGoal = (goalData: GoalInterface | null = null): void => {
