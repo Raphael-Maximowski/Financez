@@ -60,6 +60,11 @@ const handleCreateInvestment = async (): Promise<void> => {
 
 const saveInvestment = (): void => {
   if (!investmentValue.value || !investmentDate.value) return notificationManagement.displayErrorMessage("All Fields Are Required")
+  const transactionValue = typeof investmentValue.value === 'string' ? parseFloat(investmentValue.value) : investmentValue.value
+  if (transactionValue <= 0) {
+    notificationManagement.displayErrorMessage("Insert a Valid Value")
+    return
+  }
   const [day, month, year] = investmentDate.value.split("/").map(Number);
   const investmentPayload = {
     goalId: props?.goalData?.id || 0,

@@ -68,7 +68,6 @@ const calculateDataBasedInWeeks = (transactionsData: transactionsDataInObject): 
 
   if (objectKeys.length === 1) {
     const {label, ...rest} = dataSets[0]
-    console.log("Set: ", dataSets[0])
     return {
       ...rest,
       chartLabel: label.map((weekLabel) => `Week ${weekLabel}`)

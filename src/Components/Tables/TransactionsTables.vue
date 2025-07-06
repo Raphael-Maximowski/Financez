@@ -22,7 +22,6 @@ const openModal = (actionData: SavingTransactionInterface | TransactionInterface
 }
 
 const openInvestmentModal = (investmentData: SavingTransactionInterface | TransactionInterface | null = null): void => {
-  console.log("Data: ", investmentData)
   const modalPayload = {
     state: true,
     name: 'Investment Modal',

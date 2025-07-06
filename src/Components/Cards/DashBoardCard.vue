@@ -44,7 +44,6 @@ watch(userWidth, (newValue: number): void => {
 })
 
 onMounted((): void => {
-  console.log("Dashboard: ", dashBoardData.value)
   initializeToolTip()
 })
 </script>
