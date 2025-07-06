@@ -23,6 +23,10 @@ onBeforeMount(() => {
 onBeforeUnmount((): void => {
   window.removeEventListener('resize', setUserWidth)
 })
+
+onMounted(() => {
+  setUserWidth()
+})
 </script>
 
 <template>

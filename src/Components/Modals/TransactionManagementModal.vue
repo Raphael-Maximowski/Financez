@@ -85,8 +85,11 @@ const cancelInstallmentState = (): void => {
 
 const validateFormData = async (): Promise<boolean> => {
   const isValid = await validate()
-  if (isValid.valid) return true
+  if (isValid.valid && value.value > 0) return true
   const errorsData = Object.values(isValid.errors)
+    if (value.value <= 0 ) {
+      errorsData.push("Insert a Valid Value")
+  }
   notificationManagement.displayErrorMessage(errorsData[0] ?? 'Error')
   return false
 }

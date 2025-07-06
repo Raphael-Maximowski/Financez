@@ -163,12 +163,11 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const createInvestmentTransaction = (investmentData: { goalId: number, transactionData: SavingTransactionInterface }) => {
-        console.log("Investment: ", investmentData)
         setShouldCalculateDashboardData(true)
         if (!investmentData) return
         const investmentIndex = transactionsData.value.goals.findIndex((g) => g.id === investmentData.goalId)
         if (investmentIndex === -1) return
-        const lastSavingId = transactionsData?.value?.savings[transactionsData.value.savings.length - 1].id
+        const lastSavingId = transactionsData?.value?.savings.length === 0 ? 1 : transactionsData?.value?.savings[transactionsData.value.savings.length - 1].id
         const investmentToPush = {
             id: transactionsData.value.savings.length === 0 ? 1 : 
             lastSavingId ? lastSavingId + 1 : 0
@@ -181,7 +180,6 @@ export const transactionsModule = defineStore('transactionsModule', () => {
     }
 
     const updateGoal = (data: GoalDataInterface) => {
-        console.log("Data: ", data)
         setShouldCalculateDashboardData(true)
         const goalIndex = transactionsData.value.goals.findIndex((g) => g.id === data.id)
         transactionsData.value.goals[goalIndex] = data as Required<GoalDataInterface>;
@@ -194,7 +192,7 @@ export const transactionsModule = defineStore('transactionsModule', () => {
         if (!data) return
         const goalId = transactionsData.value.goals.length === 0 ? 1
             : transactionsData.value.goals[transactionsData.value.goals.length - 1].id + 1
-        const goalIndex = goalsDataGetter.value[goalsDataGetter.value.length - 1].index + 1
+        const goalIndex = transactionsData.value.goals.length === 0 ? 0 : goalsDataGetter.value[goalsDataGetter.value.length - 1].index + 1
 
         const goalToPush = {
             id: goalId,
